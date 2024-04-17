@@ -9,9 +9,6 @@
   </div>
   <the-navbar></the-navbar>
   <the-canvas></the-canvas>
-  <sidebar-box :leftSidebarOpen="true">
-    <the-table-sidebar></the-table-sidebar
-  ></sidebar-box>
 </template>
 
 <script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar-container">
+  <div class="navbar-container-buttons">
     <div class="navbar-load">
       <button>
         <img src="..\assets\upload-icon.png" />
@@ -10,10 +10,13 @@
     </div>
 
     <div class="navbar-operations">
-      <button id="create-table">
+      <button id="create-table" @click="showTableSidebar">
         <img src="..\assets\table-icon.png" />
       </button>
-      <button id="create-relationship">
+      <button
+        id="create-relationship"
+        @click="showRelationshipSidebar"
+      >
         <img src="..\assets\rel-icon.png" />
       </button>
       <button id="view-grid">
@@ -21,21 +24,43 @@
       </button>
     </div>
   </div>
+  <sidebar-box :leftSidebarOpen="this.isCreatingTable">
+    <the-table-sidebar></the-table-sidebar
+  ></sidebar-box>
 </template>
 
 <script>
+import TheTableSidebar from "./TheTableSidebar.vue";
 export default {
+  components: {
+    TheTableSidebar,
+  },
   name: "TheNavbar",
+  data() {
+    return {
+      isCreatingTable: false,
+      isCreatingRelationship: false,
+    };
+  },
   methods: {
     hi() {
       console.log("clicked");
+    },
+    showTableSidebar() {
+      console.log("Creating Table");
+      this.isCreatingTable = !this.isCreatingTable;
+    },
+    showRelationshipSidebar() {
+      console.log("Creating Relationship");
+      this.isCreatingRelationship =
+        !this.isCreatingRelationship;
     },
   },
 };
 </script>
 
 <style scoped>
-.navbar-container {
+.navbar-container-buttons {
   display: flex;
   flex-wrap: nowrap;
   align-items: center;
@@ -47,13 +72,18 @@ export default {
   margin: 0px 10px 0px;
 }
 
-.navbar-operations {
-  margin-left: 40px;
-}
 button {
   height: 30px;
   background: none;
   border: none;
+}
+
+.navbar-operations {
+  margin-left: 70px;
+}
+
+.navbar-operations > button {
+  margin-right: 20px;
 }
 img {
   height: 80%;
