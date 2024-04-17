@@ -41,6 +41,7 @@ export default {
   align-items: center;
   background-color: #e7e3dd;
   height: 40px;
+  border-bottom: rgb(192, 186, 186) solid 1px;
 }
 .navbar-load {
   margin: 0px 10px 0px;

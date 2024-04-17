@@ -5,9 +5,9 @@
     v-show="leftSidebarOpen"
     @click="hideSidebar"
   >
-    <div class="sidebar-content" @click.stop>
-      <slot> </slot>
-    </div>
+    <!-- <div class="sidebar-content" @click.stop> -->
+    <slot> </slot>
+    <!-- </div> -->
   </div>
 </template>
 
@@ -37,6 +37,7 @@ export default {
   z-index: 2;
   width: var(--sidebar-left-width);
   height: 100vh;
-  background-color: var(--sidebar-color);
+  background-color: #e7e3dd;
+  border-right: rgb(192, 186, 186) solid 2px;
 }
 </style>
