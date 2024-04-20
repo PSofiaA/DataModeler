@@ -1,22 +1,32 @@
 <template>
-  <div class="canvas-container">
-    <svg class="canvas"></svg>
-  </div>
+  <!-- <div class="canvas-container"> </div> -->
+  <svg class="canvas">
+    <entity-table></entity-table>
+    <entity-table></entity-table>
+    <entity-table></entity-table>
+  </svg>
 </template>
 
 <script>
+import EntityTable from "./EntityTable.vue";
 export default {
+  components: {
+    EntityTable,
+  },
   name: "TheCanvas",
 };
 </script>
 
 <style scoped>
-.canvas-container {
+/* .canvas-container {
+
+  height: 100vh;
+  background-color: cadetblue;
+} */
+.canvas {
   overflow-y: scroll;
+  width: 100vw;
   height: 100vh;
   background-color: cadetblue;
 }
-/* .canvas {
-  width: 100vw;
-} */
 </style>

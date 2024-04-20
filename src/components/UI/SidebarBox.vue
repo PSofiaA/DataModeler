@@ -39,5 +39,6 @@ export default {
   height: 100vh;
   background-color: #e7e3dd;
   border-right: rgb(192, 186, 186) solid 2px;
+  /* transition: max-height 0.5s, overflow 0s; */
 }
 </style>

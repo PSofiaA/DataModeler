@@ -43,9 +43,6 @@ export default {
     };
   },
   methods: {
-    hi() {
-      console.log("clicked");
-    },
     showTableSidebar() {
       console.log("Creating Table");
       this.isCreatingTable = !this.isCreatingTable;
@@ -55,6 +52,7 @@ export default {
       this.isCreatingRelationship =
         !this.isCreatingRelationship;
     },
+    createEntity() {},
   },
 };
 </script>

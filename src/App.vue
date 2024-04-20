@@ -14,13 +14,11 @@
 <script>
 import TheCanvas from "./components/TheCanvas.vue";
 import TheNavbar from "./components/TheNavbar.vue";
-import TheTableSidebar from "./components/TheTableSidebar.vue";
 
 export default {
   components: {
     TheCanvas,
     TheNavbar,
-    TheTableSidebar,
   },
   data() {
     return {
