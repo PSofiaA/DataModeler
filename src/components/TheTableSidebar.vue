@@ -5,6 +5,9 @@
       v-model="this.name"
       placeholder="Entity name"
     />
+    <div class="submit-buttons">
+      <button>Создать</button>
+    </div>
     <!-- <div class="sidebar-text-element">Ключи</div>
     <input class="input" /> -->
   </div>
@@ -15,8 +18,19 @@ export default {
   name: "TheTableSidebar",
   data() {
     return {
-      name: "",
+      entity: {
+        name: "",
+      },
     };
+  },
+  methods: {
+    createEntity() {
+      this.post.id = Date.now();
+      this.$emit("createEntity", this.entity);
+      this.entity = {
+        name: "",
+      };
+    },
   },
 };
 </script>
@@ -29,5 +43,10 @@ export default {
 }
 .sidebar-text-element {
   padding: 10px 0px;
+}
+button {
+  margin: 10px;
+  width: auto;
+  height: 20px;
 }
 </style>

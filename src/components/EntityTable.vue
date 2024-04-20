@@ -32,7 +32,7 @@ export default {
   data() {
     return {
       id: 0,
-      name: "Name",
+      name: "Entity",
       coordinates: {
         x: 400,
         y: 200,

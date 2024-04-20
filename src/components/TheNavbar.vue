@@ -13,6 +13,7 @@
       <button id="create-table" @click="showTableSidebar">
         <img src="..\assets\table-icon.png" />
       </button>
+
       <button
         id="create-relationship"
         @click="showRelationshipSidebar"
@@ -46,13 +47,16 @@ export default {
     showTableSidebar() {
       console.log("Creating Table");
       this.isCreatingTable = !this.isCreatingTable;
+      this.createEntity();
     },
     showRelationshipSidebar() {
       console.log("Creating Relationship");
       this.isCreatingRelationship =
         !this.isCreatingRelationship;
     },
-    createEntity() {},
+    createEntity() {
+      console.log("Creating Entiry");
+    },
   },
 };
 </script>

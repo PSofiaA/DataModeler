@@ -9,11 +9,16 @@
 
 <script>
 import EntityTable from "./EntityTable.vue";
+import EntityList from "./TheEntityList.vue";
 export default {
   components: {
     EntityTable,
+    EntityList,
   },
   name: "TheCanvas",
+  data() {
+    return {};
+  },
 };
 </script>
 
