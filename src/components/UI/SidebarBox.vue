@@ -15,14 +15,14 @@
 export default {
   name: "SidebarBox",
   props: {
-    leftSidebarOpen: Boolean,
-    default: false,
+    leftSidebarOpen: {
+      type: Boolean,
+      default: false,
+    },
   },
   methods: {
-    methods: {
-      hideSidebar() {
-        this.$emit("update:show", false);
-      },
+    hideSidebar() {
+      this.$emit("update:show", false);
     },
   },
 };

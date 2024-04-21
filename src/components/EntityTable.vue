@@ -1,64 +1,49 @@
 <template>
+  <!--  @mousedown="dragEntity"
+    @mouseup="dropEntity" -->
   <rect
+    @mousedown="this.$emit('movingEntity')"
+    @mouseup="this.$emit('stopMovingEntity')"
     class="entity-table"
-    v-bind="{ x: coordinates.x, y: coordinates.y }"
-    @mousedown="dragEntity"
-    @mouseup="dropEntity"
+    v-bind="{ x: x, y: y }"
   >
   </rect>
   <line
     class="svg-entity-header-line"
     v-bind="{
-      x1: coordinates.x,
-      y1: coordinates.y + 30,
-      x2: coordinates.x + 150,
-      y2: coordinates.y + 30,
+      x1: x,
+      y1: y + 30,
+      x2: x + 150,
+      y2: y + 30,
     }"
   />
   <text
     class="svg-entity-name"
     v-bind="{
-      x: coordinates.x + 50,
-      y: coordinates.y - 2,
+      x: x + 20,
+      y: y - 2,
     }"
   >
-    {{ this.name }}
+    {{ name }}
   </text>
 </template>
 
 <script>
 export default {
   name: "EntityTable",
-  data() {
-    return {
-      id: 0,
-      name: "Entity",
-      coordinates: {
-        x: 400,
-        y: 200,
-      },
-    };
-  },
-  methods: {
-    dragEntity() {
-      console.log("move");
-      document.addEventListener(
-        "mousemove",
-        this.moveEntity
-      );
+  emits: ["movingEntity", "stopMovingEntity"],
+  props: {
+    tableID: {
+      type: Number,
     },
-    moveEntity(event) {
-      console.log("move");
-      this.coordinates.x =
-        this.coordinates.x + event.movementX;
-      this.coordinates.y =
-        this.coordinates.y + event.movementY;
+    name: {
+      type: String,
     },
-    dropEntity() {
-      document.removeEventListener(
-        "mousemove",
-        this.moveEntity
-      );
+    x: {
+      type: Number,
+    },
+    y: {
+      type: Number,
     },
   },
 };
@@ -75,7 +60,9 @@ rect {
 rect.moving {
   stroke: blue;
 }
-
+.svg-entity-name {
+  color: black;
+}
 .svg-entity-header-line {
   stroke-width: 0.6;
   stroke: black;

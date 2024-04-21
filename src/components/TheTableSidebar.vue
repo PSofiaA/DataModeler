@@ -2,22 +2,22 @@
   <div id="sidebar-entity-input">
     <div class="sidebar-text-element">Имя сущности</div>
     <input-box
-      v-model="this.name"
+      v-model="entity.name"
       placeholder="Entity name"
     />
-    <div class="submit-buttons">
-      <button>Создать</button>
+    <div class="submit-button">
+      <button @click="createEntity">Создать</button>
     </div>
-    <!-- <div class="sidebar-text-element">Ключи</div>
-    <input class="input" /> -->
   </div>
 </template>
 
 <script>
 export default {
   name: "TheTableSidebar",
+  emits: ["createEntity"],
   data() {
     return {
+      currentID: 1,
       entity: {
         name: "",
       },
@@ -25,11 +25,15 @@ export default {
   },
   methods: {
     createEntity() {
-      this.post.id = Date.now();
+      this.entity.tableID = this.currentID;
+      this.entity.x = 450;
+      this.entity.y = 450;
       this.$emit("createEntity", this.entity);
+      console.log("Sidebar", this.entity);
       this.entity = {
         name: "",
       };
+      this.currentID += 1;
     },
   },
 };

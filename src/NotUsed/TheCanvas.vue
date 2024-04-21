@@ -1,9 +1,10 @@
 <template>
   <!-- <div class="canvas-container"> </div> -->
   <svg class="canvas">
+    <entity-list></entity-list>
+    <!-- <entity-table></entity-table>
     <entity-table></entity-table>
-    <entity-table></entity-table>
-    <entity-table></entity-table>
+    <entity-table></entity-table> -->
   </svg>
 </template>
 
@@ -15,6 +16,7 @@ export default {
     EntityTable,
     EntityList,
   },
+  props: {},
   name: "TheCanvas",
   data() {
     return {};
