@@ -9,12 +9,13 @@ const app = createApp(App);
 
 // РЕГИСТРАЦИЯ UI КОМПОНЕНТОВ
 UIcomponents.forEach((element) => {
+  console.log(element);
   app.component(element.name, element);
 });
 
-icons.forEach((element) => {
-  app.component(element.name, element);
-});
+// icons.forEach((element) => {
+//   app.component(element.name, element);
+// });
 
 // app.use(router)
 

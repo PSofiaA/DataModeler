@@ -1,10 +1,7 @@
 <template>
   <div id="sidebar-entity-input">
     <div class="sidebar-text-element">Имя сущности</div>
-    <input-box
-      v-model="entity.name"
-      placeholder="Entity name"
-    />
+    <input-box v-model="entity.name" placeholder="Введите имя сущности" />
     <div class="submit-button">
       <button @click="createEntity">Создать</button>
     </div>
@@ -29,7 +26,6 @@ export default {
       this.entity.x = 450;
       this.entity.y = 450;
       this.$emit("createEntity", this.entity);
-      console.log("Sidebar", this.entity);
       this.entity = {
         name: "",
       };

@@ -1,9 +1,8 @@
 <template>
-  <!--  @mousedown="dragEntity"
-    @mouseup="dropEntity" -->
   <rect
-    @mousedown="this.$emit('movingEntity')"
-    @mouseup="this.$emit('stopMovingEntity')"
+    @dblclick="this.$emit('tableEdit')"
+    @mousedown="this.$emit('tableDown')"
+    @mouseup="this.$emit('tableUp')"
     class="entity-table"
     v-bind="{ x: x, y: y }"
   >
@@ -31,7 +30,7 @@
 <script>
 export default {
   name: "EntityTable",
-  emits: ["movingEntity", "stopMovingEntity"],
+  emits: ["tableDown", "tableUp", "tableEdit"],
   props: {
     tableID: {
       type: Number,
@@ -45,6 +44,18 @@ export default {
     y: {
       type: Number,
     },
+
+    parentTables: {
+      type: Array,
+      default: () => [],
+    },
+    childTables: {
+      type: Array,
+      default: () => [],
+    },
+    styleType: {
+      default: 0,
+    },
   },
 };
 </script>
@@ -56,10 +67,9 @@ rect {
   fill: white;
   stroke: black;
   cursor: move;
+  rx: v-bind (styleType);
 }
-rect.moving {
-  stroke: blue;
-}
+
 .svg-entity-name {
   color: black;
 }

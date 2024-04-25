@@ -1,16 +1,16 @@
 <template>
   <entity-table
-    @movingEntity="
-      this.$emit('movingEntity', table.tableID)
-    "
-    @stopMovingEntity="
-      this.$emit('stopMovingEntity', table.tableID)
-    "
+    @tableDown="this.$emit('tableDown', table.tableID)"
+    @tableUp="this.$emit('tableUp', table.tableID)"
+    @tableEdit="this.$emit('tableEdit', table.tableID)"
     v-for="(table, tableID) in tables"
     :name="table.name"
     :tableID="table.tableID"
     :x="table.x"
     :y="table.y"
+    :childTables="table.childTables"
+    :parentTables="table.parentTables"
+    :styleType="table.styleType"
   ></entity-table>
 </template>
 
@@ -18,7 +18,7 @@
 import EntityTable from "@/components/EntityTable.vue";
 export default {
   name: "EntityList",
-  emits: ["movingEntity", "stopMovingEntity"],
+  emits: ["tableUp", "tableDown", "tableEdit"],
   components: {
     EntityTable,
   },
@@ -27,11 +27,7 @@ export default {
       type: Array,
     },
   },
-  methods: {
-    pickEntity(id) {
-      console.log(id);
-    },
-  },
+  methods: {},
 };
 </script>
 
