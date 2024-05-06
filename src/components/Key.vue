@@ -12,16 +12,19 @@ export default {
     keyName: {
       type: String,
     },
-    // isPrimary: {
-    //     type: Boolean
-    // },
-    // dataType,
-    // isUnique:{
-    //     type:Boolean
-    // },
-    // isNULL: {
-    //     type:Boolean
-    //},
+    isPrimary: {
+      type: Boolean,
+      default: false,
+    },
+    dataType,
+    isUnique: {
+      type: Boolean,
+      default: false,
+    },
+    isNULL: {
+      type: Boolean,
+      default: false,
+    },
   },
 };
 </script>

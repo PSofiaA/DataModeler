@@ -45,6 +45,11 @@ export default {
       type: Number,
     },
 
+    keys: {
+      type: Array,
+      default: () => [],
+    },
+
     parentTables: {
       type: Array,
       default: () => [],

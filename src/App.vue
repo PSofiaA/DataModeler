@@ -9,7 +9,7 @@
   </div>
   <div class="navbar-container-buttons">
     <div class="navbar-load">
-      <button @click="showModal">
+      <button>
         <img src=".\assets\upload-icon.png" />
       </button>
       <button>
@@ -72,8 +72,8 @@ export default {
     return {
       projectTitle: "",
       pickedEntity: {},
-      pickedParentTable: 0,
-      pickedChildTable: 0,
+      pickedParentTable: null,
+      pickedChildTable: null,
       isCreatingTable: false,
       isCreatingRelationship: false,
       isModalOpen: false,
@@ -89,6 +89,24 @@ export default {
           name: "table2",
           x: 270,
           y: 389,
+          keys: [
+            {
+              keyID: 1,
+              name: "IDcustomer",
+              isPrimary: true,
+              dataType: "Number",
+              isUnique: true,
+              isNULL: true,
+            },
+            {
+              keyID: 2,
+              name: "2",
+              isPrimary: false,
+              dataType: "Char",
+              isUnique: false,
+              isNULL: false,
+            },
+          ],
         },
         {
           tableID: 12,
@@ -141,23 +159,14 @@ export default {
         this.isCreatingRelationship != true
       ) {
         this.moveEntity(event);
-      } else if (
-        this.pickedParentTable != null &&
-        this.isCreatingRelationship == true
-      ) {
-        this.drawRelation(event);
       }
     },
     moveEntity(event) {
-      if (
-        this.pickedParentTable != null &&
-        this.isCreatingRelationship != true
-      ) {
-        this.tables[this.pickedParentTable].x =
-          this.tables[this.pickedParentTable].x + event.movementX;
-        this.tables[this.pickedParentTable].y =
-          this.tables[this.pickedParentTable].y + event.movementY;
-      }
+      console.log(event);
+      this.tables[this.pickedParentTable].x =
+        this.tables[this.pickedParentTable].x + event.movementX;
+      this.tables[this.pickedParentTable].y =
+        this.tables[this.pickedParentTable].y + event.movementY;
     },
     dropEntity() {
       this.pickedParentTable = null;
@@ -245,6 +254,5 @@ img {
   overflow-y: scroll;
   width: 100vw;
   height: 100vh;
-  background-color: cadetblue;
 }
 </style>

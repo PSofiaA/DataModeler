@@ -11,6 +11,7 @@
     :childTables="table.childTables"
     :parentTables="table.parentTables"
     :styleType="table.styleType"
+    :keys="table.keys"
   ></entity-table>
 </template>
 

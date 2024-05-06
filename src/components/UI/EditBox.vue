@@ -37,11 +37,12 @@ export default {
 }
 
 .edit-content {
+  position: relative;
   margin: auto;
-  padding: 10px;
+  /* padding: 10px; */
   background: white;
-  border-radius: 5px;
-  min-height: 500px;
-  min-width: 600px;
+  border-radius: 10px;
+  /* min-height: 500px;
+  min-width: 600px; */
 }
 </style>
