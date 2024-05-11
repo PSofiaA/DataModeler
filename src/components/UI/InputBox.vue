@@ -1,9 +1,5 @@
 <template>
-  <input
-    :value="modelValue"
-    @input="updateInput"
-    type="text"
-  />
+  <input :value="modelValue" @input="updateInput" type="text" />
 </template>
 
 <script>
@@ -22,12 +18,13 @@ export default {
 
 <style scoped>
 input {
-  /* margin: 10px; */
-  padding-left: 20px;
-  display: block;
-  height: var(--sidebar-input-height);
-  width: calc(var(--sidebar-left-width) - 20px);
-  background-color: var(--sidebar-input-color);
+  width: 200px;
+  margin-right: 5px;
+  margin-top: 10px;
+  border-radius: 5px;
+  height: 35px;
   border: 1px solid var(--button-border-color);
+  padding: 0px 15px 0px;
+  letter-spacing: 1px;
 }
 </style>

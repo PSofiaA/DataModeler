@@ -21,7 +21,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    isNULL: {
+    isNotNULL: {
       type: Boolean,
       default: false,
     },

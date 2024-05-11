@@ -17,6 +17,7 @@ export default {
       currentID: 1,
       entity: {
         name: "",
+        keys: [],
       },
     };
   },

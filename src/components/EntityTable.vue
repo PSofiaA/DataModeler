@@ -1,4 +1,13 @@
 <template>
+  <text
+    class="svg-entity-name"
+    v-bind="{
+      x: x + 20,
+      y: y - 2,
+    }"
+  >
+    {{ name }}
+  </text>
   <rect
     @dblclick="this.$emit('tableEdit')"
     @mousedown="this.$emit('tableDown')"
@@ -16,15 +25,7 @@
       y2: y + 30,
     }"
   />
-  <text
-    class="svg-entity-name"
-    v-bind="{
-      x: x + 20,
-      y: y - 2,
-    }"
-  >
-    {{ name }}
-  </text>
+  <text> </text>
 </template>
 
 <script>

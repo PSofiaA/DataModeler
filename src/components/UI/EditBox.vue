@@ -1,6 +1,8 @@
 <template>
-  <div class="edit" v-if="show" @click="hideDialog">
-    <div class="edit-content" @click.stop>
+  <!-- @click="hideDialog" -->
+  <!-- @click.stop -->
+  <div class="edit" v-if="show">
+    <div class="edit-content">
       <slot> </slot>
     </div>
   </div>
@@ -39,10 +41,7 @@ export default {
 .edit-content {
   position: relative;
   margin: auto;
-  /* padding: 10px; */
   background: white;
   border-radius: 10px;
-  /* min-height: 500px;
-  min-width: 600px; */
 }
 </style>

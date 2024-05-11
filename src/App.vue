@@ -51,6 +51,7 @@
     <entity-edit-form
       :entity="pickedEntity"
       @editEntity="editEntity"
+      @entityModalClose="entityModalClose"
     ></entity-edit-form>
   </edit-box>
 </template>
@@ -83,6 +84,7 @@ export default {
           name: "table",
           x: 350,
           y: 289,
+          keys: [],
         },
         {
           tableID: 11,
@@ -94,17 +96,17 @@ export default {
               keyID: 1,
               name: "IDcustomer",
               isPrimary: true,
-              dataType: "Number",
+              dataType: "char",
               isUnique: true,
-              isNULL: true,
+              isNotNULL: true,
             },
             {
               keyID: 2,
               name: "2",
               isPrimary: false,
-              dataType: "Char",
+              dataType: "char",
               isUnique: false,
-              isNULL: false,
+              isNotNULL: false,
             },
           ],
         },
@@ -113,6 +115,7 @@ export default {
           name: "table3",
           x: 440,
           y: 489,
+          keys: [],
         },
       ],
     };
@@ -132,6 +135,10 @@ export default {
         .indexOf(tableID);
       this.pickedEntity = this.tables[this.pickedParentTable];
       this.isModalOpen = true;
+    },
+    entityModalClose() {
+      this.pickedEntity = null;
+      this.isModalOpen = false;
     },
     editEntity(editedEntity) {
       const index = this.tables.findIndex(
@@ -162,7 +169,7 @@ export default {
       }
     },
     moveEntity(event) {
-      console.log(event);
+      // console.log(event);
       this.tables[this.pickedParentTable].x =
         this.tables[this.pickedParentTable].x + event.movementX;
       this.tables[this.pickedParentTable].y =

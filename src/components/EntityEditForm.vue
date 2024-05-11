@@ -1,18 +1,17 @@
 <template>
   <div class="modal-content">
-    <form @submit.prevent>
-      <div class="modal-topbar">
-        <img src="../assets/project-icon.png" />
-        <div class="modal-title">Редактировать сущность</div>
+    <div class="modal-title">Редактировать сущность</div>
+    <hr />
+    <form @submit.prevent="handleSubmit">
+      <div class="entity-property">Имя сущности:</div>
+      <input-box v-model="editedEntity.name" />
+      <div class="modal-buttons">
+        <button type="button" @click="keyModalCreate">Добавить ключ</button>
+        <button type="handleSubmit">ОК</button>
       </div>
-
-      <div class="edit-name">
-        <div>Имя сущности:</div>
-        <input v-model="editedEntity.name" />
-      </div>
-
-      <button @click="editEntity">ОК</button>
-      <button @click="openKeyModal">Добавить ключ</button>
+      <close-button @click="entityModalClose" class="close-button" type="button"
+        >X</close-button
+      >
     </form>
     <div class="modal-keys">
       <table>
@@ -23,16 +22,26 @@
           <th>NOT NULL</th>
           <th>UNIQUE</th>
         </tr>
-        <tr v-for="key in entity.keys" :key="key.keyID">
-          <td>{{ key.isPrimary }}</td>
-          <td>{{ key.name }}</td>
-          <td>{{ key.dataType }}</td>
-          <td>{{ key.isNULL }}</td>
-          <td>{{ key.isUnique }}</td>
+        <tr
+          v-for="entityKey in entity.keys"
+          :key="entityKey.keyID"
+          @click="keyModalEdit(entityKey)"
+        >
+          <td>{{ entityKey.isPrimary }}</td>
+          <td>{{ entityKey.name }}</td>
+          <td>{{ entityKey.dataType }}</td>
+          <td>{{ entityKey.isNotNULL }}</td>
+          <td>{{ entityKey.isUnique }}</td>
         </tr>
       </table>
     </div>
-    <edit-box v-model:show="isKeyModalOpen"><key-form></key-form></edit-box>
+    <edit-box v-model:show="isKeyModalOpen"
+      ><key-form
+        :entityKey="editKey"
+        @editKey="submitKey"
+        @keyModalClose="keyModalClose"
+      ></key-form
+    ></edit-box>
   </div>
 </template>
 
@@ -43,20 +52,46 @@ export default {
     KeyForm,
   },
   name: "EntityEditForm",
-  emits: ["editEntity"],
+  emits: ["editEntity", "entityModalClose"],
   data() {
     return {
       isKeyModalOpen: false,
+      editKey: null,
       editedEntity: { ...this.entity },
     };
   },
   props: { entity: { type: Object } },
   methods: {
-    editEntity() {
+    //async ??
+    handleSubmit() {
       this.$emit("editEntity", this.editedEntity);
     },
-    openKeyModal() {
+    entityModalClose() {
+      this.editedEntity = null;
+      this.$emit("entityModalClose");
+    },
+    keyModalCreate() {
       this.isKeyModalOpen = true;
+    },
+    keyModalEdit(entityKey) {
+      this.editKey = { ...entityKey };
+      this.isKeyModalOpen = true;
+    },
+    keyModalClose() {
+      this.editKey = null;
+      this.isKeyModalOpen = false;
+    },
+    submitKey(editedKey, flag) {
+      if (flag) {
+        const index = this.editedEntity.keys.findIndex(
+          (x) => editedKey.keyID === x.keyID
+        );
+        this.editedEntity.keys[index] = editedKey;
+      } else {
+        this.editedEntity.keys.push(editedKey);
+      }
+      this.isKeyModalOpen = false;
+      this.editKey = null;
     },
   },
 };
@@ -65,63 +100,78 @@ export default {
 <style scoped>
 .modal-content {
   width: 600px;
-  height: 500px;
-}
-.modal-topbar {
-  height: 30px;
-  color: black;
-  background-color: #e7e3dd;
-  border-radius: 4px 4px 0px 0px;
-  display: flex;
+  height: 470px;
 }
 .modal-title {
-  padding: 2px 3px 2px;
+  height: 45px;
+  padding: 10px 25px 0px;
   font-size: 1.2em;
-  letter-spacing: 0;
+  letter-spacing: 1px;
 }
-.edit-name {
-  margin-left: 35px;
-  padding: 3px;
+hr {
+  width: 400;
+  size: 0.9;
+  color: #e7e3dd;
 }
-input {
-  font-size: 15px;
-  width: 30%;
-  border: 1px solid var(--button-border-color);
-  background-color: transparent;
-  outline-width: 0;
-  padding: 3px;
-  margin-top: 3px;
-  margin-bottom: 10px;
+form {
+  margin: 10px 25px 20px;
+  display: flex;
+  flex-direction: column;
 }
-img {
-  padding: 3px 3px 2px;
-  height: 90%;
-  opacity: 0.8;
+.entity-property {
+  font-weight: 500;
+  font-size: 1.1em;
+  margin-top: 10px;
 }
-/* button {
+.modal-buttons {
+  display: inline-block;
   position: absolute;
   bottom: 20px;
   right: 20px;
-} */
+}
+button {
+  width: 110px;
+  height: 30px;
+  margin: 10px;
+  background-color: #269eef;
+  border: 1px solid #269eef;
+  border-radius: 5px;
+  color: white;
+  font-weight: 500;
+}
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+}
+/* (modal-content -  modal-keys)  / 2 - margin */
 .modal-keys {
-  width: 100%;
-  height: 350px;
-  border: 1px solid var(--button-border-color);
+  width: 550px;
+  height: 250px;
+  margin-left: 25px;
+  /* border: none; */
 }
 table {
   width: 100%;
-  margin-bottom: 20px;
-  border: 1px solid #dddddd;
-  /* border-collapse: collapse; */
+  border-collapse: collapse;
 }
-.table th {
+table th {
   font-weight: bold;
-  background: #efefef;
-  border: 1px solid #dddddd;
-  padding: 2px;
-}
-.table td {
+  background: white;
   border: 1px solid #dddddd;
   padding: 5px;
+}
+table td {
+  border: 1px solid #dddddd;
+  text-align: center;
+  padding: 5px;
+}
+
+tr:nth-child(even) {
+  background-color: #f2f2f2;
+}
+tr:hover {
+  background-color: lightblue;
+  cursor: pointer;
 }
 </style>
