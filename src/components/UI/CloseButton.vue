@@ -18,10 +18,10 @@ export default {
   padding: 0;
   font-size: 15px;
   /* font-weight: bold; */
-  /* background: hsl(216, 100, 50); */
+  background: hsl(216, 100, 50);
   /* background: hsl(0, 90%, 46%); */
-  background: white;
-  color: black;
+  /* background: white; */
+  /* color: black; */
   border-radius: 50%;
   width: 25px;
   height: 25px;

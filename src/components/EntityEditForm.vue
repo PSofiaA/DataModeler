@@ -16,11 +16,13 @@
     <div class="modal-keys">
       <table>
         <tr style="background-color: #e7e3dd">
+          <!-- <th>#</th> -->
           <th>PK</th>
           <th>Имя</th>
           <th>Тип данных</th>
           <th>NOT NULL</th>
           <th>UNIQUE</th>
+          <th>#</th>
         </tr>
         <tr
           v-for="entityKey in entity.keys"
@@ -32,6 +34,9 @@
           <td>{{ entityKey.dataType }}</td>
           <td>{{ entityKey.isNotNULL }}</td>
           <td>{{ entityKey.isUnique }}</td>
+          <td>
+            <delete-button></delete-button>
+          </td>
         </tr>
       </table>
     </div>
@@ -126,12 +131,14 @@ form {
 .modal-buttons {
   display: inline-block;
   position: absolute;
-  bottom: 20px;
-  right: 20px;
+  bottom: 10px;
+  right: 10px;
 }
 button {
-  width: 110px;
-  height: 30px;
+  width: fit-content;
+  /* width: 110px; */
+  padding: 10px;
+  height: 35px;
   margin: 10px;
   background-color: #269eef;
   border: 1px solid #269eef;

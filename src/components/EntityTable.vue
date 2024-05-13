@@ -68,6 +68,7 @@ export default {
 
 <style scoped>
 rect {
+  z-index: 1;
   width: 150px;
   height: 100px;
   fill: white;
@@ -82,5 +83,8 @@ rect {
 .svg-entity-header-line {
   stroke-width: 0.6;
   stroke: black;
+}
+rect:hover {
+  filter: drop-shadow(0 0 0.4rem rgba(76, 74, 74, 0.358));
 }
 </style>

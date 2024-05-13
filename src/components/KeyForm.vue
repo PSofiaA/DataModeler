@@ -128,12 +128,14 @@ form {
   font-weight: 200;
   margin: 0px 22px 10px;
 }
+/* https://fdossena.com/?p=html5cool/buttons/i.frag */
 button {
-  width: 60px;
+  padding: 5px 10px 5px;
+  width: fit-content;
   height: 30px;
   background-color: #269eef;
   border: 1px solid #269eef;
-  border-radius: 5px;
+  border-radius: 7px;
   color: white;
   font-weight: 500;
   position: absolute;
