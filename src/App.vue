@@ -7,6 +7,7 @@
     <div class="nav-container">
       <ul class="nav-operations">
         <li>
+          <!-- createRelationship -->
           <button id="create-relationship" @click="createRelationship">
             <i class="fa-solid fa-arrows-left-right"></i>
             <span class="button-text">Создать отношение</span>
@@ -26,72 +27,15 @@
         </li>
       </ul>
     </div>
-    <div class="navbar-load">
+    <div class="navbar-load" @click="save">
       <button>
         <i class="fa-solid fa-download"></i>
       </button>
     </div>
   </div>
-
-  <!-- <i class="fa-solid fa-question"></i> -->
-  <!-- <i class="fa-solid fa-table"></i> -->
-  <!-- <i class="fa-solid fa-table-cells-large"></i> -->
-  <!-- <i class="fa-solid fa-download"></i> -->
-  <!-- <button>
-        <img src=".\assets\upload-icon.png" />
-      </button> -->
-  <!-- <img src=".\assets\table-icon.png" /> -->
-  <!-- <i class="fa-solid fa-table-cells-large"></i> -->
-  <!-- <img src=".\assets\rel-icon.png" /> -->
-  <!-- <img src=".\assets\view-icon.png" /> -->
-  <!-- <img src=".\assets\download-icon.png" /> -->
-  <!-- <div class="navbar-container">
-    <div class="project-title">
-      
-      
-    </div> -->
-  <!-- <div class="navbar-operations">
-    </div>
-    
-    <hr />
-  </div> -->
-  <!-- <div class="project-main">
-    <img src="./assets/project-icon.png" />
-    <input
-      class="project-name"
-      placeholder="Диаграмма без названия"
-      type="text"
-    />
-  </div>
-  <div class="navbar-container-buttons">
-    <div class="navbar-load">
-      <button>
-        <img src=".\assets\upload-icon.png" />
-      </button>
-      <button>
-        <img src=".\assets\download-icon.png" />
-      </button>
-    </div>
-
-    <div class="navbar-operations">
-      <button id="create-table" @click="showTableSidebar">
-        <img src=".\assets\table-icon.png" />
-      </button>
-
-      <button id="create-relationship" @click="createRelationship">
-        <img src=".\assets\rel-icon.png" />
-      </button>
-      <button id="view-grid">
-        <img src=".\assets\view-icon.png" />
-      </button>
-    </div>
-  </div> -->
-
-  <!-- <sidebar-box :leftSidebarOpen="this.isCreatingTable">
-    <the-table-sidebar @createEntity="createEntity"></the-table-sidebar
-  ></sidebar-box> -->
   <svg
     class="canvas"
+    id="projectBD"
     v-on:mousemove="moveOnCanvas"
     v-on:mouseup="dropEntity"
     v-on:mouseleave="dropEntity"
@@ -123,7 +67,18 @@
     <!-- <g v-for="rel in this.relationships" id="connection">
       {{ drawRelationship(rel) }}
     </g> -->
-    <line id="connection"></line>
+
+    <entity-relationship
+      v-for="(rel, index) in this.relationships"
+      :key="index"
+      :parentTable="rel.parentTable"
+      :childTable="rel.childTable"
+      :type="rel.type"
+      :x1="rel.x1"
+      :y1="rel.y1"
+      :x2="rel.x2"
+      :y2="rel.y2"
+    ></entity-relationship>
     <entity-list
       @tableDown="pickEntity"
       @tableUp="dropEntity"
@@ -146,6 +101,7 @@ import EntityList from "./components/TheEntityList.vue";
 import TheTableSidebar from "./components/TheTableSidebar.vue";
 import EntityEditForm from "./components/EntityEditForm.vue";
 import EditBox from "./components/UI/EditBox.vue";
+import EntityRelationship from "./components/EntityRelationship.vue";
 
 export default {
   components: {
@@ -153,6 +109,7 @@ export default {
     EntityEditForm,
     EntityList,
     EditBox,
+    EntityRelationship,
   },
 
   data() {
@@ -169,18 +126,7 @@ export default {
       isCreatingRelationship: false,
 
       isModalOpen: false,
-      relationships: [
-        {
-          parentTable: 0,
-          childTable: 1,
-          type: "regular",
-        },
-        {
-          parentTable: 1,
-          childTable: 0,
-          type: "regular",
-        },
-      ],
+      relationships: [],
       tables: [
         {
           tableID: 10,
@@ -200,7 +146,7 @@ export default {
               name: "IDcustomer",
               isPrimary: true,
               dataType: "char",
-              isUnique: true,
+              isUnique: false,
               isNotNULL: true,
             },
             {
@@ -247,16 +193,36 @@ export default {
           // console.log("Final parent input, ", this.pickedParentTable);
           // let parent = this.pickedParentTable;
           // let child = this.pickedChildTable;
-          this.relationships.push({
-            parentTable: this.pickedParentTable,
-            childTable: this.pickedChildTable,
-            type: "new",
-          });
+          this.calcRelationship();
           this.pickedChildTable = null;
           this.pickedParentTable = null;
           this.isCreatingRelationship = false;
         }
       }, 500);
+    },
+    calcRelationship() {
+      let centerXP = this.tables[this.pickedParentTable].x + 150 / 2;
+      let centerYP = this.tables[this.pickedParentTable].y + 100 / 2;
+      let centerXC = this.tables[this.pickedChildTable].x + 150 / 2;
+      let centerYC = this.tables[this.pickedChildTable].y + 100 / 2;
+
+      let distX = centerXP - centerXC;
+      let distY = centerYP - centerYC;
+
+      let p1 = this.calcDistance(distX, distY, centerXP, centerYP, 150, 100);
+      let p2 = this.calcDistance(-distX, -distY, centerXC, centerYC, 150, 100);
+
+      let finRelationship = {
+        parentTable: this.pickedParentTable,
+        childTable: this.pickedChildTable,
+        type: "test",
+        x1: p1[0],
+        y1: p1[1],
+        x2: p2[0],
+        y2: p2[1],
+      };
+      this.tables[this.pickedChildTable].styleType = 10;
+      this.relationships.push(finRelationship);
     },
     drawRelationship() {
       let centerXP = this.tables[this.relationships[1].parentTable].x + 150 / 2;
@@ -318,14 +284,16 @@ export default {
       this.isCreatingTable = false;
     },
     pickEntity(tableID) {
-      if (this.pickedParentTable == null)
+      if (this.pickedParentTable == null) {
+        console.log("pick parent");
         this.pickedParentTable = this.tables
           .map(function (e) {
             return e.tableID;
           })
           .indexOf(tableID);
-      else if (this.pickedParentTable != null) {
-        console.log("Picking child");
+        // this.pickedParentTable.setAttribute("class", "picked");
+      } else if (this.pickedParentTable != null) {
+        console.log("Pick child");
         this.pickedChildTable = this.tables
           .map(function (e) {
             return e.tableID;
@@ -355,6 +323,33 @@ export default {
     },
     setCanvas() {
       this.isGridView = !this.isGridView;
+    },
+    downloadSVG(event) {
+      const svg = document.querySelector("svg");
+      const base64doc = btoa(unescape(encodeURIComponent(svg.outerHTML)));
+      const a = document.createElement("a");
+      const e = new MouseEvent("click");
+      a.download = "download.svg";
+      a.href = "data:image/svg+xml;base64," + base64doc;
+      a.dispatchEvent(e);
+    },
+    triggerDownload(imgURI, fileName) {
+      let a = document.createElement("a");
+
+      a.setAttribute("download", "image.svg");
+      a.setAttribute("href", imgURI);
+      a.setAttribute("target", "_blank");
+
+      a.click();
+    },
+    save() {
+      const svg = document.querySelector("svg");
+      console.log(svg);
+      let data = new XMLSerializer().serializeToString(svg);
+      let svgBlob = new Blob([data], { type: "image/svg+xml;charset=utf-8" });
+      let url = URL.createObjectURL(svgBlob);
+
+      this.triggerDownload(url);
     },
   },
 };
@@ -422,46 +417,12 @@ input {
   padding: 10px 15px;
   letter-spacing: 1px;
 }
-/* .navbar-container {
-  display: flex;
-  flex-wrap: nowrap;
-  align-items: center;
-  height: 55px;
-  border-bottom: rgb(192, 186, 186) solid 1px;
-} */
-/* .navbar-load {
-  margin: 0px 10px 0px;
-  position: absolute;
-  top: 0px;
-  right: 5px;
-} */
-
-/* button {
-  height: 30px;
-  text-align: center;
-  background: none;
-  border: none;
-} */
-
-/* .navbar-operations {
-  margin-left: 70px;
-}
-
-.navbar-operations > button {
-  margin-right: 20px;
-} */
-/* img {
-  margin: 8px;
-  height: 80%;
-  opacity: 0.8;
-} */
 .canvas {
   overflow-y: scroll;
   width: 100vw;
   height: 100vh;
   /* background-color: #24252a; */
 }
-
 #connection {
   stroke-width: 1;
   stroke: red;

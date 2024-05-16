@@ -2,7 +2,8 @@
   <rect
     @dblclick="this.$emit('tableEdit')"
     @mousedown="this.$emit('tableDown')"
-    @mouseup="this.$emit('tableUp')"
+    @mouseup="pick"
+    id="entity"
     class="entity-table"
     v-bind="{ x: x, y: y }"
   >
@@ -42,7 +43,7 @@
     font-size="15"
     font-weight="600"
     fill="black"
-    >{{ this.updateOffset(entityKey) }}
+    >{{ this.showModifiers(entityKey) }}
   </text>
   <line
     class="svg-entity-header-line"
@@ -63,7 +64,7 @@
     font-size="15"
     font-weight="500"
     fill="black"
-    >{{ entityKey.name }}
+    >{{ this.showModifiers(entityKey) }}
   </text>
   <!-- <line
     class="svg-entity-header-line"
@@ -134,13 +135,15 @@ export default {
     },
   },
   methods: {
-    updateOffset(entityKey) {
+    showModifiers(entityKey) {
       if (entityKey.isUnique) {
         return entityKey.name + "(AK)";
-      }
-      if (entityKey.isPrimary) {
+      } else {
         return entityKey.name;
       }
+    },
+    pick(event) {
+      this.$emit("tableUp");
     },
   },
 };
@@ -166,4 +169,8 @@ rect {
 rect:hover {
   filter: drop-shadow(0 0 0.4rem rgba(76, 74, 74, 0.358));
 }
+/* .picked {
+  stroke-width: 1;
+  stroke: red;
+} */
 </style>

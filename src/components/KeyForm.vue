@@ -44,15 +44,24 @@
         Первичный ключ
       </label>
       <div class="property-descriptor">Описание первичного ключа</div>
-
+      <!--    @change="setUnique($event, editedKey.isPrimary)" -->
       <label class="attribute-property">
-        <input type="checkbox" v-model="editedKey.isUnique" />
+        <input
+          type="checkbox"
+          v-model="editedKey.isUnique"
+          @change="setUnique($event, editedKey.isPrimary)"
+        />
         Уникальный/альтернативный ключ
       </label>
       <div class="property-descriptor">Описание альтернативного ключа</div>
 
       <label class="attribute-property">
-        <input type="checkbox" v-model="editedKey.isNotNULL" /> NOT NULL
+        <input
+          type="checkbox"
+          @change="setNULL($event, editedKey.isPrimary)"
+          v-model="editedKey.isNotNULL"
+        />
+        NOT NULL
       </label>
       <div class="property-descriptor">Описание not null ключа</div>
       <button type="submit">ОК</button>
@@ -99,11 +108,23 @@ export default {
         this.editedKey.isNotNULL = false;
       }
     },
+    setUnique(event, flag) {
+      if (event.target.checked && flag) {
+        this.editedKey.isUnique = false;
+        event.target.checked = false;
+      }
+    },
+    setNULL(event, flag) {
+      if (flag) {
+        this.editedKey.isNOTNULL = true;
+        event.target.checked = true;
+      }
+    },
     handleSubmit() {
-      console.log("key form submitted");
+      // console.log("key form submitted");
       this.$emit("editKey", this.editedKey, this.isEditing);
       this.isEditing = false;
-      console.log("key form flag", this.isEditing);
+      // console.log("key form flag", this.isEditing);
     },
     keyModalClose() {
       this.editedKey = null;

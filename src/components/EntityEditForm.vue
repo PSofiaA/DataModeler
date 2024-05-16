@@ -23,7 +23,6 @@
         <i class="fa fa-table"></i>
         <i class="fa fa-trash"></i> -->
         <tr style="background-color: #e7e3dd">
-          <!-- <th>#</th> -->
           <th style="width: 10%">PK</th>
           <th style="width: 15%">Имя</th>
           <th style="width: 10%">Тип данных</th>
@@ -107,7 +106,8 @@ export default {
     handleSubmit() {
       this.$emit("editEntity", this.editedEntity);
     },
-    entityModalClose() {
+    entityModalClose(event) {
+      // console.log(event);
       this.editedEntity = null;
       this.$emit("entityModalClose");
     },
@@ -123,6 +123,7 @@ export default {
       this.isKeyModalOpen = false;
     },
     submitKey(editedKey, flag) {
+      // flag shows if this is already existed edited key or the new one
       if (flag) {
         const index = this.editedEntity.keys.findIndex(
           (x) => editedKey.keyID === x.keyID
