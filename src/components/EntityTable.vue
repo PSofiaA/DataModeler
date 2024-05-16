@@ -1,13 +1,4 @@
 <template>
-  <text
-    class="svg-entity-name"
-    v-bind="{
-      x: x + 20,
-      y: y - 2,
-    }"
-  >
-    {{ name }}
-  </text>
   <rect
     @dblclick="this.$emit('tableEdit')"
     @mousedown="this.$emit('tableDown')"
@@ -16,15 +7,73 @@
     v-bind="{ x: x, y: y }"
   >
   </rect>
+  <text
+    class="svg-entity-name"
+    v-if="keys.length != 0"
+    v-bind="{
+      x: x + 10,
+      y: y - 5,
+    }"
+    font-weight="600"
+  >
+    {{ name }}
+  </text>
+  <!--  v-bind="{
+      x: x + 50,
+      y: y + 55,
+    }" -->
+  <text
+    v-else
+    class="svg-entity-name"
+    dominant-baseline="middle"
+    text-anchor="middle"
+    v-bind="{
+      x: x + 75,
+      y: y + 50,
+    }"
+    font-weight="600"
+  >
+    {{ name }}
+  </text>
+
+  <text
+    v-for="(entityKey, index) in filteredPKs"
+    v-bind="{ x: x + 13, y: y + 15 * (1 + index) + 5 }"
+    font-size="15"
+    font-weight="600"
+    fill="black"
+    >{{ this.updateOffset(entityKey) }}
+  </text>
   <line
     class="svg-entity-header-line"
+    v-if="filteredPKs.length != 0"
     v-bind="{
-      x1: x,
-      y1: y + 30,
-      x2: x + 150,
-      y2: y + 30,
+      x1: x + 10,
+      y1: y + filteredPKs.length * 16 + 10,
+      x2: x + 130,
+      y2: y + filteredPKs.length * 16 + 10,
     }"
   />
+  <text
+    v-for="(entityKey, index) in filteredRKs"
+    v-bind="{
+      x: x + 13,
+      y: y + filteredPKs.length * 15 + 15 + 15 * (1 + index),
+    }"
+    font-size="15"
+    font-weight="500"
+    fill="black"
+    >{{ entityKey.name }}
+  </text>
+  <!-- <line
+    class="svg-entity-header-line"
+    v-bind="{
+      x1: x + 10,
+      y1: y + 30,
+      x2: x + 130,
+      y2: y + 30,
+    }"
+  /> -->
   <text> </text>
 </template>
 
@@ -32,6 +81,12 @@
 export default {
   name: "EntityTable",
   emits: ["tableDown", "tableUp", "tableEdit"],
+  data() {
+    return {
+      offsetPK: 25,
+      offsetRK: 30,
+    };
+  },
   props: {
     tableID: {
       type: Number,
@@ -50,7 +105,12 @@ export default {
       type: Array,
       default: () => [],
     },
-
+    width: {
+      type: Number,
+    },
+    height: {
+      type: Number,
+    },
     parentTables: {
       type: Array,
       default: () => [],
@@ -61,6 +121,26 @@ export default {
     },
     styleType: {
       default: 0,
+    },
+  },
+  computed: {
+    filteredPKs() {
+      // console.log("pk", this.keys);
+      return this.keys.filter((d) => d.isPrimary == true);
+    },
+    filteredRKs() {
+      // console.log("rk", this.keys);
+      return this.keys.filter((d) => d.isPrimary == false);
+    },
+  },
+  methods: {
+    updateOffset(entityKey) {
+      if (entityKey.isUnique) {
+        return entityKey.name + "(AK)";
+      }
+      if (entityKey.isPrimary) {
+        return entityKey.name;
+      }
     },
   },
 };
@@ -76,7 +156,6 @@ rect {
   cursor: move;
   rx: v-bind (styleType);
 }
-
 .svg-entity-name {
   color: black;
 }

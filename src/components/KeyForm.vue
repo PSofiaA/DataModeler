@@ -22,18 +22,25 @@
           required
         >
           <option class="placeholder" selected disabled value="">
-            Select language
+            Выберите тип данных
           </option>
           <option value="char">CHAR</option>
           <option value="varchar">VARCHAR</option>
           <option value="integer">INTEGER</option>
           <option value="numeric">NUMERIC</option>
           <option value="text">TEXT</option>
+          <option value="time">TIME</option>
+          <option value="date">DATE</option>
         </select>
       </label>
 
       <label class="attribute-property">
-        <input type="checkbox" v-model="editedKey.isPrimary" />
+        <input
+          type="checkbox"
+          @change="setPrimary"
+          v-model="editedKey.isPrimary"
+        />
+        <!-- <input type="checkbox" v-model="editedKey.isPrimary" /> -->
         Первичный ключ
       </label>
       <div class="property-descriptor">Описание первичного ключа</div>
@@ -83,6 +90,15 @@ export default {
     }
   },
   methods: {
+    setPrimary(event) {
+      if (event.target.checked) {
+        this.editedKey.isPrimary = true;
+        this.editedKey.isNotNULL = true;
+      } else {
+        this.editedKey.isPrimary = false;
+        this.editedKey.isNotNULL = false;
+      }
+    },
     handleSubmit() {
       console.log("key form submitted");
       this.$emit("editKey", this.editedKey, this.isEditing);

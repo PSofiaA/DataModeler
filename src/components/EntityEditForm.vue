@@ -5,37 +5,67 @@
     <form @submit.prevent="handleSubmit">
       <div class="entity-property">Имя сущности:</div>
       <input-box v-model="editedEntity.name" />
-      <div class="modal-buttons">
-        <button type="button" @click="keyModalCreate">Добавить ключ</button>
-        <button type="handleSubmit">ОК</button>
+      <div class="modal-buttons-container">
+        <button type="button" class="modal-button" @click="keyModalCreate">
+          Добавить ключ
+        </button>
+        <button type="handleSubmit" class="modal-button">ОК</button>
       </div>
-      <close-button @click="entityModalClose" class="close-button" type="button"
-        >X</close-button
-      >
+      <div class="close-button">
+        <close-button @click="entityModalClose" type="button">X</close-button>
+      </div>
     </form>
     <div class="modal-keys">
       <table>
+        <!-- <i class="fa fa-key"></i>
+        <i class="fa fa-check"></i>
+        <i class="fa fa-xmark"></i>
+        <i class="fa fa-table"></i>
+        <i class="fa fa-trash"></i> -->
         <tr style="background-color: #e7e3dd">
           <!-- <th>#</th> -->
-          <th>PK</th>
-          <th>Имя</th>
-          <th>Тип данных</th>
-          <th>NOT NULL</th>
-          <th>UNIQUE</th>
-          <th>#</th>
+          <th style="width: 10%">PK</th>
+          <th style="width: 15%">Имя</th>
+          <th style="width: 10%">Тип данных</th>
+          <th style="width: 10%">NOT NULL</th>
+          <th style="width: 10%">UNIQUE</th>
+          <th style="width: 10%" v-show="activeRow">Действие</th>
         </tr>
         <tr
-          v-for="entityKey in entity.keys"
+          v-for="(entityKey, index) in entity.keys"
           :key="entityKey.keyID"
-          @click="keyModalEdit(entityKey)"
+          @mouseover="activeRow = true"
+          @mouseleave="activeRow = false"
         >
-          <td>{{ entityKey.isPrimary }}</td>
+          <td v-if="entityKey.isPrimary == true">
+            <i class="fa fa-key gold"></i>
+          </td>
+          <td v-else></td>
           <td>{{ entityKey.name }}</td>
           <td>{{ entityKey.dataType }}</td>
-          <td>{{ entityKey.isNotNULL }}</td>
-          <td>{{ entityKey.isUnique }}</td>
-          <td>
-            <delete-button></delete-button>
+          <td v-if="entityKey.isNotNULL == true">
+            <i class="fa fa-check"></i>
+          </td>
+          <td v-else><i class="fa fa-xmark"></i></td>
+          <td v-if="entityKey.isUnique == true"><i class="fa fa-check"></i></td>
+          <td v-else><i class="fa fa-xmark"></i></td>
+          <td v-show="activeRow">
+            <button
+              type="button"
+              class="action-button"
+              id="edit"
+              @click="keyModalEdit(entityKey, index)"
+            >
+              <i class="fa fa-edit"></i>
+            </button>
+            <button
+              type="button"
+              class="action-button"
+              id="delete"
+              @click="deleteKey(index)"
+            >
+              <i class="fa fa-trash"></i>
+            </button>
           </td>
         </tr>
       </table>
@@ -60,12 +90,18 @@ export default {
   emits: ["editEntity", "entityModalClose"],
   data() {
     return {
+      activeRow: false,
       isKeyModalOpen: false,
       editKey: null,
       editedEntity: { ...this.entity },
     };
   },
   props: { entity: { type: Object } },
+  computed: {
+    orderedKeys: function () {
+      return _.orderBy(this.entity.keys, "isPrimary");
+    },
+  },
   methods: {
     //async ??
     handleSubmit() {
@@ -98,6 +134,9 @@ export default {
       this.isKeyModalOpen = false;
       this.editKey = null;
     },
+    deleteKey(index) {
+      this.editedEntity.keys.splice(index, 1);
+    },
   },
 };
 </script>
@@ -128,43 +167,72 @@ form {
   font-size: 1.1em;
   margin-top: 10px;
 }
-.modal-buttons {
+.modal-buttons-container {
   display: inline-block;
   position: absolute;
   bottom: 10px;
   right: 10px;
 }
-button {
+.modal-button {
   width: fit-content;
-  /* width: 110px; */
-  padding: 10px;
-  height: 35px;
+  padding: 7px;
+  height: 30px;
   margin: 10px;
   background-color: #269eef;
   border: 1px solid #269eef;
   border-radius: 5px;
   color: white;
   font-weight: 500;
+  letter-spacing: 1px;
 }
 .close-button {
   position: absolute;
   top: 10px;
   right: 10px;
 }
+.action-button {
+  background: transparent;
+  border: none;
+  height: 15px;
+}
+.fa {
+  font-size: 14px;
+  color: #424242;
+}
+.fa-edit:hover {
+  color: hsl(135, 69%, 35%);
+}
+.fa-trash:hover {
+  color: hsl(0, 90%, 46%);
+}
+.modal-button:hover {
+  cursor: pointer;
+}
+.gold {
+  color: #ffd700;
+  text-shadow: 0 0 1px #000000aa;
+}
 /* (modal-content -  modal-keys)  / 2 - margin */
 .modal-keys {
   width: 550px;
   height: 250px;
   margin-left: 25px;
-  /* border: none; */
 }
 table {
   width: 100%;
+  overflow-y: auto;
+  height: 250px;
+  display: block;
   border-collapse: collapse;
 }
 table th {
-  font-weight: bold;
+  position: sticky;
+  top: 0;
+  font-weight: normal;
   background: white;
+  height: 35px;
+  /* background-color: #269eef;
+  color: white; */
   border: 1px solid #dddddd;
   padding: 5px;
 }
@@ -172,12 +240,16 @@ table td {
   border: 1px solid #dddddd;
   text-align: center;
   padding: 5px;
+  /* font-weight: bold; */
 }
-
+tr {
+  width: min-content;
+}
 tr:nth-child(even) {
   background-color: #f2f2f2;
 }
 tr:hover {
+  font-weight: bold;
   background-color: lightblue;
   cursor: pointer;
 }
