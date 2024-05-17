@@ -18,7 +18,7 @@ export default {
   padding: 0;
   font-size: 15px;
   /* font-weight: bold; */
-  background-color: #269eef;
+  background-color: rgba(0, 136, 169, 0.8);
   color: white;
   border-radius: 50%;
   width: 25px;
@@ -33,7 +33,7 @@ export default {
     color: white;
     -webkit-transition: background-color 10ms linear;
     -ms-transition: background-color 10ms linear;
-    transition: background-color 10ms linear;
+    transition: all 0.3s ease 0s;
   }
 }
 </style>

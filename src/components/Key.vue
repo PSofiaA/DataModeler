@@ -25,6 +25,13 @@ export default {
       type: Boolean,
       default: false,
     },
+    isForeign: {
+      type: Boolean,
+      default: false,
+    },
+    foreignEntity: {
+      type: Number,
+    },
   },
 };
 </script>

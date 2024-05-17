@@ -27,4 +27,7 @@ input {
   padding: 0px 15px 0px;
   letter-spacing: 1px;
 }
+input:focus {
+  outline: 1.7px solid rgba(0, 136, 169, 0.9);
+}
 </style>

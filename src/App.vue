@@ -78,6 +78,7 @@
       :y1="rel.y1"
       :x2="rel.x2"
       :y2="rel.y2"
+      @relationshipClicked="relationshipModalEdit"
     ></entity-relationship>
     <entity-list
       @tableDown="pickEntity"
@@ -134,12 +135,14 @@ export default {
           x: 350,
           y: 289,
           keys: [],
+          childTables: [],
         },
         {
           tableID: 11,
           name: "table2",
           x: 270,
           y: 389,
+          childTables: [],
           keys: [
             {
               keyID: 1,
@@ -148,14 +151,25 @@ export default {
               dataType: "char",
               isUnique: false,
               isNotNULL: true,
+              isForeign: false,
             },
             {
               keyID: 2,
+              name: "ID2",
+              isPrimary: true,
+              dataType: "char",
+              isUnique: false,
+              isNotNULL: true,
+              isForeign: false,
+            },
+            {
+              keyID: 3,
               name: "2",
               isPrimary: false,
               dataType: "char",
               isUnique: false,
               isNotNULL: false,
+              isForeign: false,
             },
           ],
         },
@@ -165,6 +179,7 @@ export default {
           x: 440,
           y: 489,
           keys: [],
+          childTables: [],
         },
       ],
     };
@@ -177,58 +192,69 @@ export default {
         y: 450,
         name: "Новая сущность",
         keys: [],
+        childTables: [],
       });
       this.currentEntityID += 1;
-      //this.isCreatingTable = !this.isCreatingTable;
-      // console.log(this.tables[this.relationships[0].parentTable].x);
     },
     createRelationship() {
       this.isCreatingRelationship = true;
       setTimeout(() => {
         if (this.pickedChildTable == null) {
-          // console.log("Waiting for child input, ", this.pickedChildTable);
           this.createRelationship();
         } else {
-          // console.log("Final child input, ", this.pickedChildTable);
-          // console.log("Final parent input, ", this.pickedParentTable);
-          // let parent = this.pickedParentTable;
-          // let child = this.pickedChildTable;
-          this.calcRelationship();
+          this.calcRelationship(this.pickedParentTable, this.pickedChildTable);
+          // this.tables[this.pickedParentTable].childTables.push(
+          //   this.pickedChildTable
+          // );
           this.pickedChildTable = null;
           this.pickedParentTable = null;
           this.isCreatingRelationship = false;
         }
       }, 500);
     },
-    calcRelationship() {
-      let centerXP = this.tables[this.pickedParentTable].x + 150 / 2;
-      let centerYP = this.tables[this.pickedParentTable].y + 100 / 2;
-      let centerXC = this.tables[this.pickedChildTable].x + 150 / 2;
-      let centerYC = this.tables[this.pickedChildTable].y + 100 / 2;
-
-      let distX = centerXP - centerXC;
-      let distY = centerYP - centerYC;
-
-      let p1 = this.calcDistance(distX, distY, centerXP, centerYP, 150, 100);
-      let p2 = this.calcDistance(-distX, -distY, centerXC, centerYC, 150, 100);
-
+    calcRelationship(parent, child) {
+      let p1 = this.calcCoordinates(parent, child)[0];
+      let p2 = this.calcCoordinates(parent, child)[1];
       let finRelationship = {
-        parentTable: this.pickedParentTable,
-        childTable: this.pickedChildTable,
+        parentTable: parent,
+        childTable: child,
         type: "test",
         x1: p1[0],
         y1: p1[1],
         x2: p2[0],
         y2: p2[1],
       };
-      this.tables[this.pickedChildTable].styleType = 10;
+      this.tables[child].styleType = 10;
+      const PKs = this.tables[parent].keys.filter(
+        (currentKey) => currentKey.isPrimary == true
+      );
+      const Pk2 = JSON.parse(JSON.stringify(PKs));
+      for (const pk of Pk2) {
+        pk.isForeign = true;
+        pk.isPrimary = false;
+        pk.foreignEntity = parent;
+        this.tables[child].keys.push(pk);
+      }
       this.relationships.push(finRelationship);
     },
-    drawRelationship() {
-      let centerXP = this.tables[this.relationships[1].parentTable].x + 150 / 2;
-      let centerYP = this.tables[this.relationships[1].parentTable].y + 100 / 2;
-      let centerXC = this.tables[this.relationships[1].childTable].x + 150 / 2;
-      let centerYC = this.tables[this.relationships[1].childTable].y + 100 / 2;
+    updateRelationship(rectA) {
+      const rels = this.relationships.filter(
+        (item) => item.parentTable == rectA || item.childTable == rectA
+      );
+      for (const rel of rels) {
+        let p1 = this.calcCoordinates(rel.parentTable, rel.childTable)[0];
+        let p2 = this.calcCoordinates(rel.parentTable, rel.childTable)[1];
+        rel.x1 = p1[0];
+        rel.y1 = p1[1];
+        rel.x2 = p2[0];
+        rel.y2 = p2[1];
+      }
+    },
+    calcCoordinates(parent, child) {
+      let centerXP = this.tables[parent].x + 150 / 2;
+      let centerYP = this.tables[parent].y + 100 / 2;
+      let centerXC = this.tables[child].x + 150 / 2;
+      let centerYC = this.tables[child].y + 100 / 2;
 
       let distX = centerXP - centerXC;
       let distY = centerYP - centerYC;
@@ -236,12 +262,7 @@ export default {
       let p1 = this.calcDistance(distX, distY, centerXP, centerYP, 150, 100);
       let p2 = this.calcDistance(-distX, -distY, centerXC, centerYC, 150, 100);
 
-      var cxn = document.getElementById("connection");
-
-      cxn.setAttributeNS(null, "x1", p1[0]);
-      cxn.setAttributeNS(null, "y1", p1[1]);
-      cxn.setAttributeNS(null, "x2", p2[0]);
-      cxn.setAttributeNS(null, "y2", p2[1]);
+      return [p1, p2];
     },
     calcDistance(distX, distY, centerX, centerY, width, height) {
       width = width / 2;
@@ -258,7 +279,9 @@ export default {
         ];
       }
     },
-
+    relationshipModalEdit() {
+      alert("rel clicked");
+    },
     showModal(tableID) {
       this.pickedParentTable = this.tables
         .map(function (e) {
@@ -291,7 +314,6 @@ export default {
             return e.tableID;
           })
           .indexOf(tableID);
-        // this.pickedParentTable.setAttribute("class", "picked");
       } else if (this.pickedParentTable != null) {
         console.log("Pick child");
         this.pickedChildTable = this.tables
@@ -312,11 +334,11 @@ export default {
       }
     },
     moveEntity(event) {
-      // console.log(event);
       this.tables[this.pickedParentTable].x =
         this.tables[this.pickedParentTable].x + event.movementX;
       this.tables[this.pickedParentTable].y =
         this.tables[this.pickedParentTable].y + event.movementY;
+      this.updateRelationship(this.pickedParentTable);
     },
     dropEntity() {
       if (this.isCreatingRelationship == false) this.pickedParentTable = null;

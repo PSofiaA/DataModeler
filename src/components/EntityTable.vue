@@ -126,11 +126,9 @@ export default {
   },
   computed: {
     filteredPKs() {
-      // console.log("pk", this.keys);
       return this.keys.filter((d) => d.isPrimary == true);
     },
     filteredRKs() {
-      // console.log("rk", this.keys);
       return this.keys.filter((d) => d.isPrimary == false);
     },
   },
@@ -138,6 +136,8 @@ export default {
     showModifiers(entityKey) {
       if (entityKey.isUnique) {
         return entityKey.name + "(AK)";
+      } else if (entityKey.isForeign) {
+        return entityKey.name + "(FK)";
       } else {
         return entityKey.name;
       }
@@ -151,7 +151,7 @@ export default {
 
 <style scoped>
 rect {
-  z-index: 1;
+  stroke-width: 1.6;
   width: 150px;
   height: 100px;
   fill: white;

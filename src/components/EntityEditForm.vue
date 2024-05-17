@@ -179,15 +179,20 @@ form {
   padding: 7px;
   height: 30px;
   margin: 10px;
-  background-color: #269eef;
-  border: 1px solid #269eef;
+  background-color: rgba(0, 136, 169, 0.8);
+  border: none;
   border-radius: 5px;
   color: white;
   font-weight: 500;
   letter-spacing: 1px;
+  transition: all 0.3s ease 0s;
+}
+.modal-button:hover {
+  background-color: rgba(0, 136, 169, 1);
 }
 .close-button {
   position: absolute;
+
   top: 10px;
   right: 10px;
 }
@@ -232,6 +237,9 @@ table th {
   font-weight: normal;
   background: white;
   height: 35px;
+  background-color: rgba(0, 136, 169, 0.8);
+  color: white;
+  font-weight: 500;
   /* background-color: #269eef;
   color: white; */
   border: 1px solid #dddddd;
@@ -241,9 +249,9 @@ table td {
   border: 1px solid #dddddd;
   text-align: center;
   padding: 5px;
-  /* font-weight: bold; */
 }
 tr {
+  transition: all 0.3s ease 0s;
   width: min-content;
 }
 tr:nth-child(even) {
@@ -251,7 +259,7 @@ tr:nth-child(even) {
 }
 tr:hover {
   font-weight: bold;
-  background-color: lightblue;
+  background-color: rgba(0, 136, 169, 0.3);
   cursor: pointer;
 }
 </style>

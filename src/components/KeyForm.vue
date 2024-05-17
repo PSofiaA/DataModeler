@@ -96,6 +96,7 @@ export default {
       this.editedKey.isNotNULL = false;
       this.editedKey.isUnique = false;
       this.editedKey.isPrimary = false;
+      this.editedKey.isForeign = false;
     }
   },
   methods: {
@@ -165,19 +166,24 @@ form {
   font-weight: 200;
   margin: 0px 22px 10px;
 }
-/* https://fdossena.com/?p=html5cool/buttons/i.frag */
 button {
-  padding: 5px 10px 5px;
+  padding: 7px;
   width: fit-content;
   height: 30px;
-  background-color: #269eef;
-  border: 1px solid #269eef;
-  border-radius: 7px;
+  background-color: rgba(0, 136, 169, 0.8);
+  border: none;
+  border-radius: 5px;
   color: white;
   font-weight: 500;
+  letter-spacing: 1px;
   position: absolute;
+  transition: all 0.3s ease 0s;
   bottom: 20px;
   right: 20px;
+}
+button:hover {
+  cursor: pointer;
+  background-color: rgba(0, 136, 169, 1);
 }
 .close-button {
   position: absolute;
