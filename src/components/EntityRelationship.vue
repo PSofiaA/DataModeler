@@ -9,6 +9,8 @@
     @mousedown="lineClicked"
     v-bind="{ x1: x1, y1: y1, x2: x2, y2: y2 }"
   ></line>
+  <!-- <circle r="45" cx="50" cy="50" fill="red" /> -->
+  <!-- <circle r="5" v-bind="{ cx: x2, cy: y2 }" /> -->
 </template>
 
 <script>

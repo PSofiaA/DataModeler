@@ -25,6 +25,11 @@
             <span class="button-text">Сетка</span>
           </button>
         </li>
+        <li>
+          <button @click="this.isGuideVisible = true">
+            <i class="fa-solid fa-question"></i>
+          </button>
+        </li>
       </ul>
     </div>
     <div class="navbar-load" @click="save">
@@ -95,6 +100,10 @@
       @entityModalClose="entityModalClose"
     ></entity-edit-form>
   </edit-box>
+  <sidebar-box
+    v-show="this.isGuideVisible"
+    @guideClose="setGuide"
+  ></sidebar-box>
 </template>
 
 <script>
@@ -123,7 +132,7 @@ export default {
       pickedParentTable: null,
       pickedChildTable: null,
 
-      isCreatingTable: false,
+      isGuideVisible: true,
       isCreatingRelationship: false,
 
       isModalOpen: false,
@@ -185,6 +194,9 @@ export default {
     };
   },
   methods: {
+    setGuide() {
+      this.isGuideVisible = false;
+    },
     showTableSidebar() {
       this.tables.push({
         tableID: this.currentEntityID,
