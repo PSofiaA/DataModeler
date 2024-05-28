@@ -1,5 +1,3 @@
-<!-- bigint, bit, bit varying, boolean, char, character varying, character, varchar, date, double precision, integer, interval, numeric, decimal, real, smallint, time (с часовым поясом и без), timestamp (с часовым поясом и без), xml. -->
-
 <template>
   <div class="key-modal-content">
     <div class="modal-title">Атрибут</div>
@@ -65,7 +63,10 @@
         NOT NULL
       </label>
       <div class="property-descriptor">Данный ключ не может быть NULL</div>
-      <button type="submit">ОК</button>
+      <div class="modal-buttons-container">
+        <modal-button type="submit">ОК</modal-button>
+      </div>
+
       <close-button class="close-button" type="button" @click="keyModalClose"
         >X</close-button
       >
@@ -165,28 +166,12 @@ form {
   font-weight: 200;
   margin: 0px 22px 10px;
 }
-button {
-  padding: 7px;
-  width: fit-content;
-  height: 30px;
-  background-color: rgba(0, 136, 169, 0.8);
-  border: none;
-  border-radius: 5px;
-  color: white;
-  font-weight: 500;
-  letter-spacing: 1px;
+.modal-buttons-container {
   position: absolute;
-  transition: all 0.3s ease 0s;
   bottom: 20px;
   right: 20px;
 }
-button:hover {
-  cursor: pointer;
-  background-color: rgba(0, 136, 169, 1);
-}
-/* .close-button {
-  
-} */
+
 .box-property {
   width: 200px;
   border-radius: 5px;

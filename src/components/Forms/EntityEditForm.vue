@@ -6,10 +6,10 @@
       <div class="entity-property">Имя сущности:</div>
       <input-box v-model="editedEntity.name" />
       <div class="modal-buttons-container">
-        <button type="button" class="modal-button" @click="keyModalCreate">
+        <modal-button type="button" @click="keyModalCreate">
           Добавить ключ
-        </button>
-        <button type="handleSubmit" class="modal-button">ОК</button>
+        </modal-button>
+        <modal-button type="handleSubmit">ОК</modal-button>
       </div>
       <close-button class="close-button" @click="entityModalClose" type="button"
         >X</close-button
@@ -167,22 +167,6 @@ form {
   bottom: 10px;
   right: 10px;
 }
-.modal-button {
-  width: fit-content;
-  padding: 7px;
-  height: 30px;
-  margin: 10px;
-  background-color: rgba(0, 136, 169, 0.8);
-  border: none;
-  border-radius: 5px;
-  color: white;
-  font-weight: 500;
-  letter-spacing: 1px;
-  transition: all 0.3s ease 0s;
-}
-.modal-button:hover {
-  background-color: rgba(0, 136, 169, 1);
-}
 
 .action-button {
   background: transparent;
@@ -199,7 +183,7 @@ form {
 .fa-trash:hover {
   color: hsl(0, 90%, 46%);
 }
-.modal-button:hover {
+.action-button:hover {
   cursor: pointer;
 }
 .gold {

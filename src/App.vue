@@ -7,8 +7,6 @@
     <div class="nav-container">
       <ul class="nav-operations">
         <li>
-          <!-- createRelationship -->
-          <!-- <button id="create-relationship" @click="createRelationship"> -->
           <button id="create-relationship" @click="this.isRelModalOpen = true">
             <i class="fa-solid fa-arrows-left-right"></i>
             <span class="button-text">Создать отношение</span>
@@ -99,10 +97,10 @@
       @entityModalClose="entityModalClose"
     ></entity-edit-form>
   </edit-box>
-  <sidebar-box
+  <user-guide-box
     v-show="this.isGuideVisible"
     @guideClose="setGuide"
-  ></sidebar-box>
+  ></user-guide-box>
 
   <edit-box v-model:show="isRelModalOpen"
     ><relationship-form
@@ -114,15 +112,15 @@
 
 <script>
 import EntityList from "./components/TheEntityList.vue";
-import TheTableSidebar from "./components/TheTableSidebar.vue";
-import EntityEditForm from "./components/EntityEditForm.vue";
+import UserGuideBox from "./components/UI/UserGuideBox.vue";
 import EditBox from "./components/UI/EditBox.vue";
 import EntityRelationship from "./components/EntityRelationship.vue";
-import RelationshipForm from "./components/RelationshipForm.vue";
+import EntityEditForm from "./components/Forms/EntityEditForm.vue";
+import RelationshipForm from "./components/Forms/RelationshipForm.vue";
 
 export default {
   components: {
-    TheTableSidebar,
+    UserGuideBox,
     EntityEditForm,
     EntityList,
     EditBox,
@@ -143,6 +141,7 @@ export default {
       isCreatingRelationship: false,
       isRelModalOpen: false,
       isModalOpen: false,
+
       relationships: [],
       tables: [],
     };
@@ -162,7 +161,6 @@ export default {
         keys: [],
         childTables: [],
       });
-      // this.currentEntityID += 1;
     },
     createRelationship(relType) {
       this.isRelModalOpen = false;
@@ -176,9 +174,6 @@ export default {
             this.pickedChildTable,
             relType
           );
-          // this.tables[this.pickedParentTable].childTables.push(
-          //   this.pickedChildTable
-          // );
           this.pickedChildTable = null;
           this.pickedParentTable = null;
           this.isCreatingRelationship = false;
@@ -331,17 +326,6 @@ export default {
     },
     setCanvas() {
       this.isGridView = !this.isGridView;
-    },
-    zoomIn() {},
-    zoomOut() {},
-    downloadSVG(event) {
-      const svg = document.querySelector("svg");
-      const base64doc = btoa(unescape(encodeURIComponent(svg.outerHTML)));
-      const a = document.createElement("a");
-      const e = new MouseEvent("click");
-      a.download = "download.svg";
-      a.href = "data:image/svg+xml;base64," + base64doc;
-      a.dispatchEvent(e);
     },
     triggerDownload(imgURI, fileName) {
       let a = document.createElement("a");

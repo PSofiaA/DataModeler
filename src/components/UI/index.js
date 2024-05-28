@@ -1,7 +1,7 @@
 import InputBox from "./InputBox.vue";
-import SidebarBox from "./SidebarBox.vue";
+import UserGuideBox from "./UserGuideBox.vue";
 import EditBox from "./EditBox.vue";
 import CloseButton from "./CloseButton.vue";
-import DeleteButton from "./DeleteButton.vue";
+import ModalButton from "./ModalButton.vue";
 
-export default [SidebarBox, InputBox, EditBox, CloseButton, DeleteButton];
+export default [UserGuideBox, InputBox, EditBox, CloseButton, ModalButton];

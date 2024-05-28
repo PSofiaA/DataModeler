@@ -31,16 +31,13 @@
       <button type="button" class="modal-button" @click="hideSidebar">
         Понятно!
       </button>
-      <!-- <div class="sidebar-content" @click.stop> -->
-      <slot> </slot>
-      <!-- </div> -->
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: "SidebarBox",
+  name: "UserGuideBox",
   emits: ["guideClose"],
   props: {
     leftSidebarOpen: {
@@ -70,7 +67,6 @@ export default {
   padding: 30px 40px;
   color: #ecf0f1;
   text-decoration: none;
-  /* transition: max-height 0.5s, overflow 0s; */
 }
 a {
   color: rgb(0, 204, 255);
