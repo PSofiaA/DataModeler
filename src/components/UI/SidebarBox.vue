@@ -1,33 +1,40 @@
 <template>
   <!-- v-show="leftSidebarOpen" -->
-  <div class="sidebar-left">
-    <header>Lorem ipsum</header>
-    <img
-      src="C:\Users\Администратор\Desktop\DataModeler\src\assets\IDEF-title.png"
-    />
-    <ul>
-      <li>
-        Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
-        tempor incididunt ut labore et dolore magna aliqua. Malesuada
-        pellentesque elit eget gravida cum sociis natoque. Tortor consequat id
-        porta nibh venenatis cras.
-        <a href="https://yourwebsite.com" title="IDEF1X документация"
-          >документация IDEF1X</a
-        >
-      </li>
+  <div class="edit">
+    <div class="sidebar-left">
+      <header>Data Modeler</header>
+      <img
+        src="C:\Users\Администратор\Desktop\DataModeler\src\assets\IDEF-title.png"
+      />
+      <ul>
+        <li>
+          Это - редактор для построения <br />диаграмм баз данных, который<br />позволяет
+          проектировать и<br />управлять структурами баз <br />данных, создавая
+          диаграммы с <br />таблицами, связями и <br />ограничениями.
+        </li>
 
-      <li>
-        Sit amet massa vitae tortor condimentum lacinia quis. Urna nunc id
-        cursus metus aliquam.
-      </li>
-      <li>Posuere ac ut consequat semper viverra nam.</li>
-    </ul>
-    <button type="button" class="modal-button" @click="hideSidebar">
-      Понятно!
-    </button>
-    <!-- <div class="sidebar-content" @click.stop> -->
-    <slot> </slot>
-    <!-- </div> -->
+        <li>
+          Данный редактор использует <br />
+
+          <a
+            href="https://en.wikipedia.org/wiki/IDEF1X"
+            title="IDEF1X документация"
+          >
+            нотацию IDEF1X.</a
+          >
+        </li>
+        <li>
+          Редактор упрощает процесс<br />разработки и управления базамиданных,
+          делая его более <br />интуитивным и наглядным.
+        </li>
+      </ul>
+      <button type="button" class="modal-button" @click="hideSidebar">
+        Понятно!
+      </button>
+      <!-- <div class="sidebar-content" @click.stop> -->
+      <slot> </slot>
+      <!-- </div> -->
+    </div>
   </div>
 </template>
 
@@ -52,11 +59,11 @@ export default {
 <style scoped>
 .sidebar-left {
   position: fixed;
-  top: 90px;
+  top: 80px;
   right: 10px;
   z-index: 1;
   width: 390px;
-  height: 630px;
+  height: 650px;
   background-color: #414249;
   border-right: #414249 solid 2px;
   border-radius: 10px;
@@ -72,6 +79,7 @@ a {
 }
 img {
   width: 310px;
+  border: 30px solid white;
 }
 header {
   font-size: 20px;
@@ -87,6 +95,9 @@ ul li {
   padding: 15px 0px;
   text-wrap: pretty;
   text-align: left;
+
+  /* white-space: pre-wrap; */
+  word-break: break-all;
 }
 
 .modal-button {
@@ -102,11 +113,40 @@ ul li {
   letter-spacing: 1px;
   transition: all 0.3s ease 0s;
   position: absolute;
-  bottom: 20px;
+  bottom: 17px;
   left: 30px;
 }
 .modal-button:hover {
   cursor: pointer;
   background-color: rgba(0, 136, 169, 1);
+}
+@media screen and (max-height: 710px) {
+  .sidebar-left {
+    width: 390px;
+    height: 520px;
+  }
+  img {
+    display: none;
+  }
+}
+@media screen and (max-width: 1050px) {
+  .sidebar-left {
+    position: fixed;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .edit {
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.4);
+    position: fixed;
+    z-index: 2;
+  }
+  img {
+    border: 30px solid white;
+  }
 }
 </style>

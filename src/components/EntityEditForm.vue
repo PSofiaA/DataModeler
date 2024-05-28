@@ -11,17 +11,12 @@
         </button>
         <button type="handleSubmit" class="modal-button">ОК</button>
       </div>
-      <div class="close-button">
-        <close-button @click="entityModalClose" type="button">X</close-button>
-      </div>
+      <close-button class="close-button" @click="entityModalClose" type="button"
+        >X</close-button
+      >
     </form>
     <div class="modal-keys">
       <table>
-        <!-- <i class="fa fa-key"></i>
-        <i class="fa fa-check"></i>
-        <i class="fa fa-xmark"></i>
-        <i class="fa fa-table"></i>
-        <i class="fa fa-trash"></i> -->
         <tr style="background-color: #e7e3dd">
           <th style="width: 10%">PK</th>
           <th style="width: 15%">Имя</th>
@@ -96,11 +91,6 @@ export default {
     };
   },
   props: { entity: { type: Object } },
-  computed: {
-    orderedKeys: function () {
-      return _.orderBy(this.entity.keys, "isPrimary");
-    },
-  },
   methods: {
     //async ??
     handleSubmit() {
@@ -125,11 +115,14 @@ export default {
     submitKey(editedKey, flag) {
       // flag shows if this is already existed edited key or the new one
       if (flag) {
-        const index = this.editedEntity.keys.findIndex(
-          (x) => editedKey.keyID === x.keyID
+        let index = this.editedEntity.keys.findIndex(
+          (x) => editedKey.keyID == x.keyID
         );
         this.editedEntity.keys[index] = editedKey;
       } else {
+        editedKey.keyID =
+          Date.now().toString(36) +
+          Math.random().toString(36).substring(2, 12).padStart(12, 0);
         this.editedEntity.keys.push(editedKey);
       }
       this.isKeyModalOpen = false;
@@ -190,12 +183,7 @@ form {
 .modal-button:hover {
   background-color: rgba(0, 136, 169, 1);
 }
-.close-button {
-  position: absolute;
 
-  top: 10px;
-  right: 10px;
-}
 .action-button {
   background: transparent;
   border: none;

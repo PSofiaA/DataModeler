@@ -4,6 +4,7 @@
   <div class="key-modal-content">
     <div class="modal-title">Атрибут</div>
     <hr />
+    <!-- добавить проверку на одинаковые имена, запретить в одной сущности два ключа с одним и тем же названием -->
     <form @submit.prevent="handleSubmit">
       <label class="attribute-property">Имя ключа:</label>
       <input-box
@@ -43,7 +44,7 @@
         <!-- <input type="checkbox" v-model="editedKey.isPrimary" /> -->
         Первичный ключ
       </label>
-      <div class="property-descriptor">Описание первичного ключа</div>
+      <div class="property-descriptor">Ключ является первичным</div>
       <!--    @change="setUnique($event, editedKey.isPrimary)" -->
       <label class="attribute-property">
         <input
@@ -53,7 +54,7 @@
         />
         Уникальный/альтернативный ключ
       </label>
-      <div class="property-descriptor">Описание альтернативного ключа</div>
+      <div class="property-descriptor">Данный ключ уникален</div>
 
       <label class="attribute-property">
         <input
@@ -63,7 +64,7 @@
         />
         NOT NULL
       </label>
-      <div class="property-descriptor">Описание not null ключа</div>
+      <div class="property-descriptor">Данный ключ не может быть NULL</div>
       <button type="submit">ОК</button>
       <close-button class="close-button" type="button" @click="keyModalClose"
         >X</close-button
@@ -122,10 +123,8 @@ export default {
       }
     },
     handleSubmit() {
-      // console.log("key form submitted");
       this.$emit("editKey", this.editedKey, this.isEditing);
       this.isEditing = false;
-      // console.log("key form flag", this.isEditing);
     },
     keyModalClose() {
       this.editedKey = null;
@@ -185,11 +184,9 @@ button:hover {
   cursor: pointer;
   background-color: rgba(0, 136, 169, 1);
 }
-.close-button {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-}
+/* .close-button {
+  
+} */
 .box-property {
   width: 200px;
   border-radius: 5px;

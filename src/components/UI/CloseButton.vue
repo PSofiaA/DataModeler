@@ -1,7 +1,6 @@
 <template>
   <button type="button" class="btn-close">
-    <span class="icon-cross"></span>
-    <span>X</span>
+    <i class="fa-solid fa-x"></i>
   </button>
 </template>
 
@@ -13,14 +12,17 @@ export default {
 
 <style scoped>
 .btn-close {
+  position: absolute;
+  top: 8px;
+  right: 10px;
   margin: 0;
   border: 0;
   padding: 0;
-  font-size: 15px;
+  font-size: 13px;
   /* font-weight: bold; */
   background-color: rgba(0, 136, 169, 0.8);
   color: white;
-  border-radius: 50%;
+  border-radius: 54%;
   width: 25px;
   height: 25px;
   display: flex;

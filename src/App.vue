@@ -8,7 +8,8 @@
       <ul class="nav-operations">
         <li>
           <!-- createRelationship -->
-          <button id="create-relationship" @click="createRelationship">
+          <!-- <button id="create-relationship" @click="createRelationship"> -->
+          <button id="create-relationship" @click="this.isRelModalOpen = true">
             <i class="fa-solid fa-arrows-left-right"></i>
             <span class="button-text">Создать отношение</span>
           </button>
@@ -38,60 +39,58 @@
       </button>
     </div>
   </div>
-  <svg
-    class="canvas"
-    id="projectBD"
-    v-on:mousemove="moveOnCanvas"
-    v-on:mouseup="dropEntity"
-    v-on:mouseleave="dropEntity"
-  >
-    <pattern
-      id="tenthGrid"
-      width="20"
-      height="20"
-      patternUnits="userSpaceOnUse"
+  <div class="canvas-container">
+    <svg
+      class="canvas"
+      id="projectBD"
+      v-on:mousemove="moveOnCanvas"
+      v-on:mouseup="dropEntity"
+      v-on:mouseleave="dropEntity"
     >
-      <path
-        d="M 60 0 L 0 0 0 50"
-        fill="none"
-        stroke="silver"
-        stroke-width="0.5"
-      />
-    </pattern>
-    <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
-      <rect width="100" height="100" fill="url(#tenthGrid)" />
-      <path
-        d="M 100 0 L 0 0 0 100"
-        fill="none"
-        stroke="gray"
-        stroke-width="0.5"
-      />
-    </pattern>
+      <pattern
+        id="tenthGrid"
+        width="20"
+        height="20"
+        patternUnits="userSpaceOnUse"
+      >
+        <path
+          d="M 60 0 L 0 0 0 50"
+          fill="none"
+          stroke="silver"
+          stroke-width="0.5"
+        />
+      </pattern>
+      <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
+        <rect width="100" height="100" fill="url(#tenthGrid)" />
+        <path
+          d="M 100 0 L 0 0 0 100"
+          fill="none"
+          stroke="gray"
+          stroke-width="0.5"
+        />
+      </pattern>
 
-    <rect v-if="isGridView" width="100%" height="580px" fill="url(#grid)" />
-    <!-- <g v-for="rel in this.relationships" id="connection">
-      {{ drawRelationship(rel) }}
-    </g> -->
-
-    <entity-relationship
-      v-for="(rel, index) in this.relationships"
-      :key="index"
-      :parentTable="rel.parentTable"
-      :childTable="rel.childTable"
-      :type="rel.type"
-      :x1="rel.x1"
-      :y1="rel.y1"
-      :x2="rel.x2"
-      :y2="rel.y2"
-      @relationshipClicked="relationshipModalEdit"
-    ></entity-relationship>
-    <entity-list
-      @tableDown="pickEntity"
-      @tableUp="dropEntity"
-      @tableEdit="showModal"
-      :tables="tables"
-    ></entity-list>
-  </svg>
+      <rect v-if="isGridView" width="100%" height="100vh" fill="url(#grid)" />
+      <entity-list
+        @tableDown="pickEntity"
+        @tableUp="dropEntity"
+        @tableEdit="showModal"
+        :tables="tables"
+      ></entity-list>
+      <entity-relationship
+        v-for="(rel, index) in this.relationships"
+        :key="index"
+        :parentTable="rel.parentTable"
+        :childTable="rel.childTable"
+        :type="rel.type"
+        :x1="rel.x1"
+        :y1="rel.y1"
+        :x2="rel.x2"
+        :y2="rel.y2"
+        @relationshipClicked="relationshipModalEdit"
+      ></entity-relationship>
+    </svg>
+  </div>
 
   <edit-box v-model:show="isModalOpen">
     <entity-edit-form
@@ -104,6 +103,13 @@
     v-show="this.isGuideVisible"
     @guideClose="setGuide"
   ></sidebar-box>
+
+  <edit-box v-model:show="isRelModalOpen"
+    ><relationship-form
+      @createRel="createRelationship"
+      @relModalClose="relModalClose"
+    ></relationship-form
+  ></edit-box>
 </template>
 
 <script>
@@ -112,6 +118,7 @@ import TheTableSidebar from "./components/TheTableSidebar.vue";
 import EntityEditForm from "./components/EntityEditForm.vue";
 import EditBox from "./components/UI/EditBox.vue";
 import EntityRelationship from "./components/EntityRelationship.vue";
+import RelationshipForm from "./components/RelationshipForm.vue";
 
 export default {
   components: {
@@ -120,13 +127,13 @@ export default {
     EntityList,
     EditBox,
     EntityRelationship,
+    RelationshipForm,
   },
 
   data() {
     return {
       projectTitle: "",
-      currentEntityID: 1,
-      isGridView: false,
+      isGridView: true,
 
       pickedEntity: {},
       pickedParentTable: null,
@@ -134,63 +141,10 @@ export default {
 
       isGuideVisible: true,
       isCreatingRelationship: false,
-
+      isRelModalOpen: false,
       isModalOpen: false,
       relationships: [],
-      tables: [
-        {
-          tableID: 10,
-          name: "table",
-          x: 350,
-          y: 289,
-          keys: [],
-          childTables: [],
-        },
-        {
-          tableID: 11,
-          name: "table2",
-          x: 270,
-          y: 389,
-          childTables: [],
-          keys: [
-            {
-              keyID: 1,
-              name: "IDcustomer",
-              isPrimary: true,
-              dataType: "char",
-              isUnique: false,
-              isNotNULL: true,
-              isForeign: false,
-            },
-            {
-              keyID: 2,
-              name: "ID2",
-              isPrimary: true,
-              dataType: "char",
-              isUnique: false,
-              isNotNULL: true,
-              isForeign: false,
-            },
-            {
-              keyID: 3,
-              name: "2",
-              isPrimary: false,
-              dataType: "char",
-              isUnique: false,
-              isNotNULL: false,
-              isForeign: false,
-            },
-          ],
-        },
-        {
-          tableID: 12,
-          name: "table3",
-          x: 440,
-          y: 489,
-          keys: [],
-          childTables: [],
-        },
-      ],
+      tables: [],
     };
   },
   methods: {
@@ -199,22 +153,29 @@ export default {
     },
     showTableSidebar() {
       this.tables.push({
-        tableID: this.currentEntityID,
+        tableID:
+          Date.now().toString(36) +
+          Math.random().toString(36).substring(2, 12).padStart(12, 0),
         x: 450,
         y: 450,
         name: "Новая сущность",
         keys: [],
         childTables: [],
       });
-      this.currentEntityID += 1;
+      // this.currentEntityID += 1;
     },
-    createRelationship() {
+    createRelationship(relType) {
+      this.isRelModalOpen = false;
       this.isCreatingRelationship = true;
       setTimeout(() => {
         if (this.pickedChildTable == null) {
-          this.createRelationship();
+          this.createRelationship(relType);
         } else {
-          this.calcRelationship(this.pickedParentTable, this.pickedChildTable);
+          this.calcRelationship(
+            this.pickedParentTable,
+            this.pickedChildTable,
+            relType
+          );
           // this.tables[this.pickedParentTable].childTables.push(
           //   this.pickedChildTable
           // );
@@ -224,28 +185,31 @@ export default {
         }
       }, 500);
     },
-    calcRelationship(parent, child) {
+    calcRelationship(parent, child, relType) {
       let p1 = this.calcCoordinates(parent, child)[0];
       let p2 = this.calcCoordinates(parent, child)[1];
       let finRelationship = {
         parentTable: parent,
         childTable: child,
-        type: "test",
+        type: relType,
         x1: p1[0],
         y1: p1[1],
         x2: p2[0],
         y2: p2[1],
       };
-      this.tables[child].styleType = 10;
+      if (relType == "Identifying") this.tables[child].styleType = 10;
       const PKs = this.tables[parent].keys.filter(
         (currentKey) => currentKey.isPrimary == true
       );
       const Pk2 = JSON.parse(JSON.stringify(PKs));
+      this.tables[parent].childTables.push(child);
       for (const pk of Pk2) {
+        if (relType == "NonIdentifying" || relType.includes("Optional")) {
+          pk.isPrimary = false;
+        }
         pk.isForeign = true;
-        pk.isPrimary = false;
         pk.foreignEntity = parent;
-        this.tables[child].keys.push(pk);
+        if (relType != "M2M") this.tables[child].keys.push(pk);
       }
       this.relationships.push(finRelationship);
     },
@@ -263,16 +227,16 @@ export default {
       }
     },
     calcCoordinates(parent, child) {
-      let centerXP = this.tables[parent].x + 150 / 2;
+      let centerXP = this.tables[parent].x + 190 / 2;
       let centerYP = this.tables[parent].y + 100 / 2;
-      let centerXC = this.tables[child].x + 150 / 2;
+      let centerXC = this.tables[child].x + 190 / 2;
       let centerYC = this.tables[child].y + 100 / 2;
 
       let distX = centerXP - centerXC;
       let distY = centerYP - centerYC;
 
-      let p1 = this.calcDistance(distX, distY, centerXP, centerYP, 150, 100);
-      let p2 = this.calcDistance(-distX, -distY, centerXC, centerYC, 150, 100);
+      let p1 = this.calcDistance(-distX, -distY, centerXP, centerYP, 190, 100);
+      let p2 = this.calcDistance(+distX, +distY, centerXC, centerYC, 190, 100);
 
       return [p1, p2];
     },
@@ -307,10 +271,20 @@ export default {
       this.pickedEntity = null;
       this.isModalOpen = false;
     },
+    relModalClose() {
+      this.isRelModalOpen = false;
+    },
     editEntity(editedEntity) {
       const index = this.tables.findIndex(
         (x) => editedEntity.tableID === x.tableID
-      ); // find index
+      ); // find index of edited entity
+      // if (editedEntity.childTables.length != 0) {
+      //   parentPKs = JSON.parse(
+      //     JSON.stringify(
+      //       this.editedEntity.keys.filter((d) => d.isPrimary == false)
+      //     )
+      //   );
+      //}
       this.tables[index] = editedEntity;
       this.isModalOpen = false;
     },
@@ -358,6 +332,8 @@ export default {
     setCanvas() {
       this.isGridView = !this.isGridView;
     },
+    zoomIn() {},
+    zoomOut() {},
     downloadSVG(event) {
       const svg = document.querySelector("svg");
       const base64doc = btoa(unescape(encodeURIComponent(svg.outerHTML)));
@@ -398,8 +374,8 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 30px 50px 30px 10px;
-  height: 20px;
+  padding: 3px 50px 3px 10px;
+  height: 60px;
 }
 li i button text {
   font-weight: 500;
@@ -451,12 +427,17 @@ input {
   padding: 10px 15px;
   letter-spacing: 1px;
 }
+.canvas-container {
+  position: relative;
+  height: 100%;
+}
 .canvas {
   overflow-y: scroll;
-  width: 100vw;
-  height: 100vh;
+  width: 100%;
+  height: 100%;
   /* background-color: #24252a; */
 }
+
 #connection {
   stroke-width: 1;
   stroke: red;
@@ -465,6 +446,10 @@ input {
 @media screen and (max-width: 1050px) {
   .button-text {
     display: none;
+  }
+  sidebar-box {
+    color: red;
+    width: 20px;
   }
 }
 </style>

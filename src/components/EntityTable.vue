@@ -8,6 +8,7 @@
     v-bind="{ x: x, y: y }"
   >
   </rect>
+
   <text
     class="svg-entity-name"
     v-if="keys.length != 0"
@@ -29,7 +30,7 @@
     dominant-baseline="middle"
     text-anchor="middle"
     v-bind="{
-      x: x + 75,
+      x: x + 95,
       y: y + 50,
     }"
     font-weight="600"
@@ -51,7 +52,7 @@
     v-bind="{
       x1: x + 10,
       y1: y + filteredPKs.length * 16 + 10,
-      x2: x + 130,
+      x2: x + 180,
       y2: y + filteredPKs.length * 16 + 10,
     }"
   />
@@ -66,15 +67,6 @@
     fill="black"
     >{{ this.showModifiers(entityKey) }}
   </text>
-  <!-- <line
-    class="svg-entity-header-line"
-    v-bind="{
-      x1: x + 10,
-      y1: y + 30,
-      x2: x + 130,
-      y2: y + 30,
-    }"
-  /> -->
   <text> </text>
 </template>
 
@@ -90,7 +82,7 @@ export default {
   },
   props: {
     tableID: {
-      type: Number,
+      type: String,
     },
     name: {
       type: String,
@@ -152,7 +144,7 @@ export default {
 <style scoped>
 rect {
   stroke-width: 1.6;
-  width: 150px;
+  width: 190px;
   height: 100px;
   fill: white;
   stroke: black;
@@ -168,6 +160,9 @@ rect {
 }
 rect:hover {
   filter: drop-shadow(0 0 0.4rem rgba(76, 74, 74, 0.358));
+}
+text {
+  word-wrap: inherit;
 }
 /* .picked {
   stroke-width: 1;

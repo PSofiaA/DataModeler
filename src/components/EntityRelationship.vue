@@ -7,10 +7,22 @@
   <line
     id="line1"
     @mousedown="lineClicked"
+    :class="type"
     v-bind="{ x1: x1, y1: y1, x2: x2, y2: y2 }"
   ></line>
-  <!-- <circle r="45" cx="50" cy="50" fill="red" /> -->
-  <!-- <circle r="5" v-bind="{ cx: x2, cy: y2 }" /> -->
+  <circle r="5" v-bind="{ cx: x2, cy: y2 }" />
+  <circle r="5" v-if="checkM2M(type)" v-bind="{ cx: x1, cy: y1 }" />
+
+  <rect
+    v-bind="{ x: x1 - 8, y: y1 - 8 }"
+    v-if="checkOptional(type)"
+    transform="rotate(45)"
+    width="8"
+    height="8"
+    stroke="black"
+    fill="white"
+    stroke-width="2"
+  />
 </template>
 
 <script>
@@ -46,10 +58,15 @@ export default {
   methods: {
     lineClicked(event) {
       console.log(event.target);
-      // if (event.target.classList.contains("line")) {
-      //   console.log(event.target.href);
-      // }
       this.$emit("relationshipClicked");
+    },
+    checkM2M(type) {
+      if (type.includes("M2M")) return true;
+      else return false;
+    },
+    checkOptional(type) {
+      if (type.includes("Optional")) return true;
+      else return false;
     },
   },
 };
@@ -66,6 +83,15 @@ svg line:hover {
 .stroke {
   stroke-width: 7;
   stroke-opacity: 0;
-  /* stroke: black; */
+}
+.Identifying {
+  stroke-dasharray: 0;
+}
+.NonIdentifying {
+  stroke-dasharray: 10;
+}
+rect {
+  transform-origin: center;
+  transform-box: fill-box;
 }
 </style>

@@ -7,7 +7,7 @@ export default {
   name: "EntityKey",
   props: {
     keyID: {
-      type: Number,
+      type: String,
     },
     keyName: {
       type: String,

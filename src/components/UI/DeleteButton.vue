@@ -44,7 +44,7 @@ button {
   background: red;
   border: none;
   border-radius: 5px;
-  box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.15);
+  box-shadow: 1px 1px 3px rgba(140, 136, 136, 0.15);
   background: #e62222;
 }
 

@@ -33,7 +33,7 @@ export default {
   bottom: 0;
   right: 0;
   left: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0);
   position: fixed;
   display: flex;
   z-index: 2;
@@ -43,6 +43,7 @@ export default {
   position: relative;
   margin: auto;
   background: white;
+  border: 1px solid var(--button-border-color);
   border-radius: 10px;
 }
 </style>
