@@ -8,7 +8,7 @@
         <select
           class="box-property"
           id="select"
-          v-model="this.relType"
+          v-model="this.editedRel.type"
           required
         >
           <option class="placeholder" selected disabled value="">
@@ -29,7 +29,17 @@
       <div class="relationship-property">Описание отношения:</div>
       <textarea id="comment"></textarea>
 
-      <button type="submit">ОК</button>
+      <div class="modal-buttons-container">
+        <modal-button
+          v-show="this.isEditing"
+          type="button"
+          @click="deleteRelation"
+        >
+          Удалить отношение
+        </modal-button>
+        <modal-button type="submit">ОК</modal-button>
+      </div>
+
       <close-button class="close-button" type="button" @click="keyModalClose"
         >X</close-button
       >
@@ -40,19 +50,37 @@
 <script>
 export default {
   name: "RelationshipForm",
-  emits: ["createRel", "relModalClose"],
+  emits: ["createRel", "relModalClose", "deleteRel"],
   data() {
     return {
-      relType: "",
+      isEditing: false,
+      editedRel: { ...this.entityRel },
     };
+  },
+  props: {
+    entityRel: {
+      type: Object,
+      required: false,
+    },
+  },
+  mounted() {
+    if (this.entityRel) {
+      this.editedRel = { ...this.entityRel };
+      this.isEditing = true;
+    } else {
+      this.editedRel.type = "";
+    }
   },
   methods: {
     handleSubmit() {
-      console.log("form submitted");
-      console.log("form submitted", this.relType);
-      this.$emit("createRel", this.relType);
+      this.$emit("createRel", this.editedRel, this.isEditing);
+    },
+    deleteRelation() {
+      this.$emit("deleteRel", this.entityRel);
     },
     keyModalClose() {
+      this.editedRel = null;
+      this.isEditing = false;
       this.$emit("relModalClose");
     },
   },
@@ -61,8 +89,8 @@ export default {
 
 <style scoped>
 .modal-content {
-  width: 340px;
-  height: 225px;
+  width: 370px;
+  height: 240px;
 }
 .modal-title {
   height: 40px;
@@ -80,25 +108,11 @@ form {
   display: flex;
   flex-direction: column;
 }
-button {
+.modal-buttons-container {
   position: absolute;
   bottom: 10px;
   right: 10px;
-  width: fit-content;
-  padding: 7px;
-  height: 30px;
-  background-color: rgba(0, 136, 169, 0.8);
-  border: none;
-  border-radius: 5px;
-  color: white;
-  font-weight: 500;
-  letter-spacing: 1px;
-  transition: all 0.3s ease 0s;
 }
-button:hover {
-  background-color: rgba(0, 136, 169, 1);
-}
-
 .relationship-property {
   font-weight: 500;
   font-size: 1.1em;

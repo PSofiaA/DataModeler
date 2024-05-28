@@ -34,6 +34,9 @@ export default {
   name: "EntityRelationship",
   emits: ["relationshipClicked"],
   props: {
+    relationshipID: {
+      type: String,
+    },
     parentTable: {
       type: Number,
       required: true,

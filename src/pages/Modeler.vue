@@ -79,6 +79,7 @@
       <entity-relationship
         v-for="(rel, index) in this.relationships"
         :key="index"
+        :relationshipID="rel.relationshipID"
         :parentTable="rel.parentTable"
         :childTable="rel.childTable"
         :type="rel.type"
@@ -86,7 +87,7 @@
         :y1="rel.y1"
         :x2="rel.x2"
         :y2="rel.y2"
-        @relationshipClicked="relationshipModalEdit"
+        @relationshipClicked="relationshipModalEdit(rel)"
       ></entity-relationship>
     </svg>
   </div>
@@ -106,8 +107,10 @@
 
   <edit-box v-model:show="isRelModalOpen"
     ><relationship-form
+      :entityRel="pickedRel"
       @createRel="createRelationship"
       @relModalClose="relModalClose"
+      @deleteRel="deleteRelationship"
     ></relationship-form
   ></edit-box>
 </template>
@@ -136,6 +139,7 @@ export default {
       isGridView: true,
 
       pickedEntity: {},
+      pickedRel: null,
       pickedParentTable: null,
       pickedChildTable: null,
 
@@ -164,28 +168,38 @@ export default {
         childTables: [],
       });
     },
-    createRelationship(relType) {
+    createRelationship(editedRel, flag) {
       this.isRelModalOpen = false;
       this.isCreatingRelationship = true;
-      setTimeout(() => {
-        if (this.pickedChildTable == null) {
-          this.createRelationship(relType);
-        } else {
-          this.calcRelationship(
-            this.pickedParentTable,
-            this.pickedChildTable,
-            relType
-          );
-          this.pickedChildTable = null;
-          this.pickedParentTable = null;
-          this.isCreatingRelationship = false;
-        }
-      }, 500);
+      if (!flag) {
+        setTimeout(() => {
+          if (this.pickedChildTable == null) {
+            this.createRelationship(editedRel, flag);
+          } else {
+            this.calcRelationship(
+              this.pickedParentTable,
+              this.pickedChildTable,
+              editedRel.type
+            );
+            this.relModalClose();
+          }
+        }, 500);
+      } else {
+        const index = this.relationships.findIndex(
+          (x) => editedRel.relationshipID === x.relationshipID
+        );
+        this.relationships[index].type = editedRel.type;
+        this.relModalClose();
+      }
     },
     calcRelationship(parent, child, relType) {
       let p1 = this.calcCoordinates(parent, child)[0];
       let p2 = this.calcCoordinates(parent, child)[1];
+      let id =
+        Date.now().toString(36) +
+        Math.random().toString(36).substring(2, 12).padStart(12, 0);
       let finRelationship = {
+        relationshipID: id,
         parentTable: parent,
         childTable: child,
         type: relType,
@@ -252,8 +266,9 @@ export default {
         ];
       }
     },
-    relationshipModalEdit() {
-      alert("rel clicked");
+    relationshipModalEdit(event) {
+      this.pickedRel = event;
+      this.isRelModalOpen = true;
     },
     showModal(tableID) {
       this.pickedParentTable = this.tables
@@ -269,6 +284,9 @@ export default {
       this.isModalOpen = false;
     },
     relModalClose() {
+      this.pickedChildTable = null;
+      this.pickedParentTable = null;
+      this.isCreatingRelationship = false;
       this.isRelModalOpen = false;
     },
     editEntity(editedEntity) {
@@ -291,6 +309,13 @@ export default {
       );
       this.tables.splice(index, 1);
       this.entityModalClose();
+    },
+    deleteRelationship(relationship) {
+      const index = this.relationships.findIndex(
+        (x) => relationship.relationshipID === x.relationshipID
+      );
+      this.relationships.splice(index, 1);
+      this.relModalClose();
     },
     createEntity(table) {
       this.tables.push(table);
@@ -338,11 +363,9 @@ export default {
     },
     triggerDownload(imgURI, fileName) {
       let a = document.createElement("a");
-
       a.setAttribute("download", "image.svg");
       a.setAttribute("href", imgURI);
       a.setAttribute("target", "_blank");
-
       a.click();
     },
     save() {
