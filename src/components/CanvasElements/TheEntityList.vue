@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import EntityTable from "@/components/EntityTable.vue";
+import EntityTable from "@/components/CanvasElements/EntityTable.vue";
 export default {
   name: "EntityList",
   emits: ["tableUp", "tableDown", "tableEdit"],

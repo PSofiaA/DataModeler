@@ -143,6 +143,7 @@ export default {
 
 <style scoped>
 rect {
+  overflow: hidden;
   stroke-width: 1.6;
   width: 190px;
   height: 100px;

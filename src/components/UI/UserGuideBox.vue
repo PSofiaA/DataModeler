@@ -56,7 +56,7 @@ export default {
 <style scoped>
 .sidebar-left {
   position: fixed;
-  top: 80px;
+  top: 115px;
   right: 10px;
   z-index: 1;
   width: 390px;
@@ -109,17 +109,17 @@ ul li {
   letter-spacing: 1px;
   transition: all 0.3s ease 0s;
   position: absolute;
-  bottom: 17px;
+  bottom: 12px;
   left: 30px;
 }
 .modal-button:hover {
   cursor: pointer;
   background-color: rgba(0, 136, 169, 1);
 }
-@media screen and (max-height: 710px) {
+@media screen and (max-height: 730px) {
   .sidebar-left {
     width: 390px;
-    height: 520px;
+    height: 500px;
   }
   img {
     display: none;

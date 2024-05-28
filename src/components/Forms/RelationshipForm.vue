@@ -28,6 +28,7 @@
       </label>
       <div class="relationship-property">Описание отношения:</div>
       <textarea id="comment"></textarea>
+
       <button type="submit">ОК</button>
       <close-button class="close-button" type="button" @click="keyModalClose"
         >X</close-button

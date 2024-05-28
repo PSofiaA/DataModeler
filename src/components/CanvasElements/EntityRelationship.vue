@@ -14,7 +14,10 @@
   <circle r="5" v-if="checkM2M(type)" v-bind="{ cx: x1, cy: y1 }" />
 
   <rect
-    v-bind="{ x: x1 - 8, y: y1 - 8 }"
+    v-bind="{
+      x: x1 - 4,
+      y: y1 - 4,
+    }"
     v-if="checkOptional(type)"
     transform="rotate(45)"
     width="8"
