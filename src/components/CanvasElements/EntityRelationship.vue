@@ -10,6 +10,7 @@
     :class="type"
     v-bind="{ x1: x1, y1: y1, x2: x2, y2: y2 }"
   ></line>
+
   <circle r="5" v-bind="{ cx: x2, cy: y2 }" />
   <circle r="5" v-if="checkM2M(type)" v-bind="{ cx: x1, cy: y1 }" />
 

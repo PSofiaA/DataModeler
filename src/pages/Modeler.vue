@@ -95,6 +95,7 @@
     <entity-edit-form
       :entity="pickedEntity"
       @editEntity="editEntity"
+      @deleteEntity="deleteEntity"
       @entityModalClose="entityModalClose"
     ></entity-edit-form>
   </edit-box>
@@ -283,6 +284,13 @@ export default {
       //}
       this.tables[index] = editedEntity;
       this.isModalOpen = false;
+    },
+    deleteEntity(editedEntity) {
+      const index = this.tables.findIndex(
+        (x) => editedEntity.tableID === x.tableID
+      );
+      this.tables.splice(index, 1);
+      this.entityModalClose();
     },
     createEntity(table) {
       this.tables.push(table);

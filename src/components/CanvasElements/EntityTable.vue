@@ -9,6 +9,13 @@
   >
   </rect>
 
+  <!-- <g class="recursive">
+    <line v-bind="{ x1: x + 95, y1: y, x2: x + 95, y2: y - 30 }"> </line>
+    <line v-bind="{ x1: x + 95, y1: y - 30, x2: x + 220, y2: y - 30 }"> </line>
+    <line v-bind="{ x1: x + 220, y1: y - 30, x2: x + 220, y2: y + 50 }"> </line>
+    <line v-bind="{ x1: x + 220, y1: y + 50, x2: x + 190, y2: y + 50 }"> </line>
+  </g> -->
+
   <text
     class="svg-entity-name"
     v-if="keys.length != 0"
@@ -164,6 +171,10 @@ rect:hover {
 }
 text {
   word-wrap: inherit;
+}
+line {
+  stroke-width: 1.6;
+  stroke: black;
 }
 /* .picked {
   stroke-width: 1;

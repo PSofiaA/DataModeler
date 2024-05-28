@@ -9,6 +9,9 @@
         <modal-button type="button" @click="keyModalCreate">
           Добавить ключ
         </modal-button>
+        <modal-button type="button" @click="deleteEntity">
+          Удалить сущность
+        </modal-button>
         <modal-button type="handleSubmit">ОК</modal-button>
       </div>
       <close-button class="close-button" @click="entityModalClose" type="button"
@@ -81,7 +84,7 @@ export default {
     KeyForm,
   },
   name: "EntityEditForm",
-  emits: ["editEntity", "entityModalClose"],
+  emits: ["editEntity", "entityModalClose", "deleteEntity"],
   data() {
     return {
       activeRow: false,
@@ -92,12 +95,13 @@ export default {
   },
   props: { entity: { type: Object } },
   methods: {
-    //async ??
     handleSubmit() {
       this.$emit("editEntity", this.editedEntity);
     },
+    deleteEntity() {
+      this.$emit("deleteEntity", this.editedEntity);
+    },
     entityModalClose(event) {
-      // console.log(event);
       this.editedEntity = null;
       this.$emit("entityModalClose");
     },
@@ -182,6 +186,9 @@ form {
 }
 .fa-trash:hover {
   color: hsl(0, 90%, 46%);
+}
+.white {
+  color: #e7e3dd;
 }
 .action-button:hover {
   cursor: pointer;
