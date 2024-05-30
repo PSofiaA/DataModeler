@@ -19,7 +19,6 @@ export default {
   border: 0;
   padding: 0;
   font-size: 13px;
-  /* font-weight: bold; */
   background-color: rgba(0, 136, 169, 0.8);
   color: white;
   border-radius: 54%;
@@ -29,9 +28,9 @@ export default {
   flex-flow: column nowrap;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
   &:hover {
     background: hsl(0, 90%, 46%);
+    cursor: pointer;
     color: white;
     -webkit-transition: background-color 10ms linear;
     -ms-transition: background-color 10ms linear;

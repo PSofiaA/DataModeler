@@ -1,41 +1,39 @@
 <template>
   <div class="navbar">
     <div class="project-name">
-      <!-- <i class="fa fa-database"></i> -->
-      <!-- <i class="fa fa-pencil"></i> -->
       <input placeholder="Диаграмма без названия" type="text" />
     </div>
     <div class="nav-container">
       <ul class="nav-operations">
         <li>
-          <button id="create-relationship" @click="this.isRelModalOpen = true">
-            <i class="fa-solid fa-arrows-left-right"></i>
+          <nav-button id="create-relationship" @click="this.isRelModalOpen = true">
+            <i class="fa fa-arrows-left-right btn-text"></i>
             <span class="button-text">Создать отношение</span>
-          </button>
+          </nav-button>
         </li>
         <li>
-          <button id="create-table" @click="showTableSidebar">
-            <i class="fa-solid fa-table"></i>
+          <nav-button id="create-table" @click="showTableSidebar">
+            <i class="fa fa-table btn-text"></i>
             <span class="button-text"> Создать сущность</span>
-          </button>
+          </nav-button>
         </li>
         <li>
-          <button id="view-grid" @click="setCanvas">
-            <i class="fa-solid fa-table-cells"></i>
+          <nav-button id="view-grid" @click="setCanvas">
+            <i class="fa fa-table-cells btn-text"></i>
             <span class="button-text">Сетка</span>
-          </button>
+          </nav-button>
         </li>
         <li>
-          <button @click="this.isGuideVisible = true">
-            <i class="fa-solid fa-question"></i>
-          </button>
+          <nav-button @click="this.isGuideVisible = true">
+            <i class="fa fa-question"></i>
+          </nav-button>
         </li>
       </ul>
     </div>
     <div class="navbar-load" @click="save">
-      <button>
-        <i class="fa-solid fa-download"></i>
-      </button>
+      <nav-button>
+        <i class="fa fa-download"></i>
+      </nav-button>
     </div>
   </div>
   <div class="canvas-container">
@@ -46,28 +44,15 @@
       v-on:mouseup="dropEntity"
       v-on:mouseleave="dropEntity"
     >
-      <pattern
-        id="tenthGrid"
-        width="20"
-        height="20"
-        patternUnits="userSpaceOnUse"
-      >
-        <path
-          d="M 60 0 L 0 0 0 50"
-          fill="none"
-          stroke="silver"
-          stroke-width="0.5"
-        />
+      <pattern id="tenthGrid" width="20" height="20" patternUnits="userSpaceOnUse">
+        <path d="M 60 0 L 0 0 0 50" fill="none" stroke="silver" stroke-width="0.5" />
       </pattern>
       <pattern id="grid" width="100" height="100" patternUnits="userSpaceOnUse">
         <rect width="100" height="100" fill="url(#tenthGrid)" />
-        <path
-          d="M 100 0 L 0 0 0 100"
-          fill="none"
-          stroke="gray"
-          stroke-width="0.5"
-        />
+        <path d="M 100 0 L 0 0 0 100" fill="none" stroke="gray" stroke-width="0.5" />
       </pattern>
+
+      <line id="line" stroke="black" stroke-width="2"></line>
 
       <rect v-if="isGridView" width="100%" height="100vh" fill="url(#grid)" />
       <entity-list
@@ -100,10 +85,7 @@
       @entityModalClose="entityModalClose"
     ></entity-edit-form>
   </edit-box>
-  <user-guide-box
-    v-show="this.isGuideVisible"
-    @guideClose="setGuide"
-  ></user-guide-box>
+  <user-guide-box v-show="this.isGuideVisible" @guideClose="setGuide"></user-guide-box>
 
   <edit-box v-model:show="isRelModalOpen"
     ><relationship-form
@@ -157,15 +139,15 @@ export default {
       this.isGuideVisible = false;
     },
     showTableSidebar() {
+      let id = this.calcID();
       this.tables.push({
-        tableID:
-          Date.now().toString(36) +
-          Math.random().toString(36).substring(2, 12).padStart(12, 0),
-        x: 450,
-        y: 450,
+        tableID: id,
+        x: 250,
+        y: 250,
         name: "Новая сущность",
         keys: [],
         childTables: [],
+        styleType: 0,
       });
     },
     createRelationship(editedRel, flag) {
@@ -173,9 +155,12 @@ export default {
       this.isCreatingRelationship = true;
       if (!flag) {
         setTimeout(() => {
-          if (this.pickedChildTable == null) {
+          if (this.pickedChildTable == null && editedRel.type != "Recursive") {
             this.createRelationship(editedRel, flag);
-          } else {
+          } else if (this.pickedParentTable != null && editedRel.type == "Recursive") {
+            console.log("haha");
+            this.drawRecursive(this.pickedParentTable);
+          } else if (editedRel.type != "Recursive") {
             this.calcRelationship(
               this.pickedParentTable,
               this.pickedChildTable,
@@ -193,27 +178,24 @@ export default {
       }
     },
     calcRelationship(parent, child, relType) {
-      let p1 = this.calcCoordinates(parent, child)[0];
-      let p2 = this.calcCoordinates(parent, child)[1];
-      let id =
-        Date.now().toString(36) +
-        Math.random().toString(36).substring(2, 12).padStart(12, 0);
+      let coordPair1 = this.calcCoordinates(parent, child)[0];
+      let coordPair2 = this.calcCoordinates(parent, child)[1];
+      let id = this.calcID();
       let finRelationship = {
         relationshipID: id,
         parentTable: parent,
         childTable: child,
         type: relType,
-        x1: p1[0],
-        y1: p1[1],
-        x2: p2[0],
-        y2: p2[1],
+        x1: coordPair1[0],
+        y1: coordPair1[1],
+        x2: coordPair2[0],
+        y2: coordPair2[1],
       };
       if (relType == "Identifying") this.tables[child].styleType = 10;
       const PKs = this.tables[parent].keys.filter(
         (currentKey) => currentKey.isPrimary == true
       );
       const Pk2 = JSON.parse(JSON.stringify(PKs));
-      this.tables[parent].childTables.push(child);
       for (const pk of Pk2) {
         if (relType == "NonIdentifying" || relType.includes("Optional")) {
           pk.isPrimary = false;
@@ -224,18 +206,79 @@ export default {
       }
       this.relationships.push(finRelationship);
     },
+    calcID() {
+      return (
+        Date.now().toString(36) +
+        Math.random().toString(36).substring(2, 12).padStart(12, 0)
+      );
+    },
+    drawRecursive(parent) {
+      let id = this.calcID();
+      let x = this.tables[parent].x;
+      let y = this.tables[parent].y;
+      let coords = this.calcRecursiveCoordinates(x, y);
+      let finRelationship = {
+        relationshipID: id,
+        parentTable: parent,
+        childTable: parent,
+        type: "Recursive",
+        x1: coords[0],
+        y1: coords[1],
+        x2: coords[2],
+        y2: coords[3],
+      };
+      const PKs = this.tables[parent].keys.filter(
+        (currentKey) => currentKey.isPrimary == true
+      );
+      const Pk2 = JSON.parse(JSON.stringify(PKs));
+      for (const pk of Pk2) {
+        pk.isPrimary = false;
+        pk.isForeign = true;
+        pk.foreignEntity = parent;
+        this.tables[parent].keys.push(pk);
+      }
+      this.relationships.push(finRelationship);
+      this.isCreatingRelationship = false;
+      let line = document.getElementById("line");
+      line.setAttribute("x1", 0);
+      line.setAttribute("y1", 0);
+      line.setAttribute("x2", 0);
+      line.setAttribute("y2", 0);
+      this.pickedChildTable = null;
+      this.pickedParentTable = null;
+      this.pickedRel = null;
+      this.isCreatingRelationship = false;
+    },
+
     updateRelationship(rectA) {
       const rels = this.relationships.filter(
         (item) => item.parentTable == rectA || item.childTable == rectA
       );
       for (const rel of rels) {
-        let p1 = this.calcCoordinates(rel.parentTable, rel.childTable)[0];
-        let p2 = this.calcCoordinates(rel.parentTable, rel.childTable)[1];
-        rel.x1 = p1[0];
-        rel.y1 = p1[1];
-        rel.x2 = p2[0];
-        rel.y2 = p2[1];
+        if (rel.type != "Recursive") {
+          let coordPair1 = this.calcCoordinates(rel.parentTable, rel.childTable)[0];
+          let coordPair2 = this.calcCoordinates(rel.parentTable, rel.childTable)[1];
+          rel.x1 = coordPair1[0];
+          rel.y1 = coordPair1[1];
+          rel.x2 = coordPair2[0];
+          rel.y2 = coordPair2[1];
+        } else {
+          let x = this.tables[rel.parentTable].x;
+          let y = this.tables[rel.parentTable].y;
+          let coords = this.calcRecursiveCoordinates(x, y);
+          rel.x1 = coords[0];
+          rel.y1 = coords[1];
+          rel.x2 = coords[2];
+          rel.y2 = coords[3];
+        }
       }
+    },
+    calcRecursiveCoordinates(x, y) {
+      let x1 = x + 95;
+      let y1 = y;
+      let x2 = x + 190;
+      let y2 = y + 50;
+      return [x1, y1, x2, y2];
     },
     calcCoordinates(parent, child) {
       let centerXP = this.tables[parent].x + 190 / 2;
@@ -246,10 +289,10 @@ export default {
       let distX = centerXP - centerXC;
       let distY = centerYP - centerYC;
 
-      let p1 = this.calcDistance(-distX, -distY, centerXP, centerYP, 190, 100);
-      let p2 = this.calcDistance(+distX, +distY, centerXC, centerYC, 190, 100);
+      let finDist1 = this.calcDistance(-distX, -distY, centerXP, centerYP, 190, 100);
+      let finDist2 = this.calcDistance(+distX, +distY, centerXC, centerYC, 190, 100);
 
-      return [p1, p2];
+      return [finDist1, finDist2];
     },
     calcDistance(distX, distY, centerX, centerY, width, height) {
       width = width / 2;
@@ -286,35 +329,39 @@ export default {
     relModalClose() {
       this.pickedChildTable = null;
       this.pickedParentTable = null;
+      this.pickedRel = null;
       this.isCreatingRelationship = false;
       this.isRelModalOpen = false;
     },
     editEntity(editedEntity) {
-      const index = this.tables.findIndex(
-        (x) => editedEntity.tableID === x.tableID
-      ); // find index of edited entity
-      // if (editedEntity.childTables.length != 0) {
-      //   parentPKs = JSON.parse(
-      //     JSON.stringify(
-      //       this.editedEntity.keys.filter((d) => d.isPrimary == false)
-      //     )
-      //   );
-      //}
+      const index = this.tables.findIndex((x) => editedEntity.tableID === x.tableID);
       this.tables[index] = editedEntity;
       this.isModalOpen = false;
     },
     deleteEntity(editedEntity) {
-      const index = this.tables.findIndex(
-        (x) => editedEntity.tableID === x.tableID
-      );
+      const index = this.tables.findIndex((x) => editedEntity.tableID === x.tableID);
+      this.relationships.forEach(function (rel, index) {
+        if (rel.parentTable == index) {
+          const childIndex = this.tables.findIndex(
+            (x) => rel.childTable.tableID === x.tableID
+          );
+          this.tables[childIndex].styleType = "0";
+        }
+      });
       this.tables.splice(index, 1);
+      // this.relationships = this.relationships.filter(
+      //   (rel) => rel.parentTable != index && rel.childTable != index
+      // );
+
       this.entityModalClose();
     },
+    updateEntityKeys(editedEntity) {},
     deleteRelationship(relationship) {
       const index = this.relationships.findIndex(
         (x) => relationship.relationshipID === x.relationshipID
       );
       this.relationships.splice(index, 1);
+      this.pickedRel = null;
       this.relModalClose();
     },
     createEntity(table) {
@@ -323,30 +370,37 @@ export default {
     },
     pickEntity(tableID) {
       if (this.pickedParentTable == null) {
-        console.log("pick parent");
         this.pickedParentTable = this.tables
           .map(function (e) {
             return e.tableID;
           })
           .indexOf(tableID);
       } else if (this.pickedParentTable != null) {
-        console.log("Pick child");
         this.pickedChildTable = this.tables
           .map(function (e) {
             return e.tableID;
           })
           .indexOf(tableID);
       }
-      console.log("Picked", this.pickedParentTable);
-      console.log("Picked child", this.pickedChildTable);
     },
     moveOnCanvas(event) {
-      if (
-        this.pickedParentTable != null &&
-        this.isCreatingRelationship != true
-      ) {
+      if (this.pickedParentTable != null && this.isCreatingRelationship != true) {
         this.moveEntity(event);
+      } else if (this.pickedParentTable != null && this.isCreatingRelationship == true) {
+        let line = document.getElementById("line");
+        line.setAttribute("x1", this.tables[this.pickedParentTable].x + 95);
+        line.setAttribute("y1", this.tables[this.pickedParentTable].y + 50);
+        line.setAttribute("x2", event.offsetX);
+        line.setAttribute("y2", event.offsetY);
+      } else {
+        this.resetLine(line);
       }
+    },
+    resetLine(line) {
+      line.setAttribute("x1", 0);
+      line.setAttribute("y1", 0);
+      line.setAttribute("x2", 0);
+      line.setAttribute("y2", 0);
     },
     moveEntity(event) {
       this.tables[this.pickedParentTable].x =
@@ -393,7 +447,7 @@ export default {
   padding: 3px 50px 3px 10px;
   height: 60px;
 }
-li i button text {
+li i text {
   font-weight: 500;
   font-size: 20px;
   color: #ecf0f1;
@@ -411,28 +465,8 @@ li i button text {
   transition: all 0.3s ease 0s;
 }
 
-button {
-  padding: 9px, 25px;
-  color: #ecf0f1;
-  border: none;
-  background-color: transparent;
-  cursor: pointer;
-  font-size: 18px;
-  transition: all 0.3s ease 0s;
-}
-button:hover {
-  height: 35px;
-  border-radius: 40px;
-  background-color: rgba(0, 136, 169, 0.8);
-}
-.button-text {
-  margin: 5px;
-}
-
-.fa {
-  margin-left: 10px;
-  font-size: 26px;
-  /* color: #4fb9ff; */
+.btn-text {
+  margin-right: 5px;
   color: #ecf0f1;
 }
 input {
@@ -453,13 +487,7 @@ input {
   overflow-y: scroll;
   width: 100%;
   height: 100vh;
-  /* background-color: #24252a; */
 }
-/* 
-#connection {
-  stroke-width: 1;
-  stroke: red;
-} */
 
 @media screen and (max-width: 1050px) {
   .button-text {

@@ -20,7 +20,7 @@
     </form>
     <div class="modal-keys">
       <table>
-        <tr style="background-color: #e7e3dd">
+        <tr>
           <th style="width: 10%">PK</th>
           <th style="width: 15%">Имя</th>
           <th style="width: 10%">Тип данных</th>
@@ -29,7 +29,7 @@
           <th style="width: 10%" v-show="activeRow">Действие</th>
         </tr>
         <tr
-          v-for="(entityKey, index) in entity.keys"
+          v-for="(entityKey, index) in editedEntity.keys"
           :key="entityKey.keyID"
           @mouseover="activeRow = true"
           @mouseleave="activeRow = false"
@@ -50,16 +50,17 @@
             <button
               type="button"
               class="action-button"
-              id="edit"
               @click="keyModalEdit(entityKey, index)"
+              v-show="!entityKey.isForeign"
             >
               <i class="fa fa-edit"></i>
             </button>
+            <text v-show="entityKey.isForeign">FK</text>
             <button
               type="button"
               class="action-button"
-              id="delete"
               @click="deleteKey(index)"
+              v-show="!entityKey.isForeign"
             >
               <i class="fa fa-trash"></i>
             </button>
@@ -90,7 +91,7 @@ export default {
       activeRow: false,
       isKeyModalOpen: false,
       editKey: null,
-      editedEntity: { ...this.entity },
+      editedEntity: JSON.parse(JSON.stringify(this.entity)),
     };
   },
   props: { entity: { type: Object } },
@@ -219,8 +220,6 @@ table th {
   background-color: rgba(0, 136, 169, 0.8);
   color: white;
   font-weight: 500;
-  /* background-color: #269eef;
-  color: white; */
   border: 1px solid #dddddd;
   padding: 5px;
 }
@@ -232,6 +231,7 @@ table td {
 tr {
   transition: all 0.3s ease 0s;
   width: min-content;
+  background-color: #e7e3dd;
 }
 tr:nth-child(even) {
   background-color: #f2f2f2;

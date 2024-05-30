@@ -2,7 +2,7 @@
   <!-- v-show="leftSidebarOpen" -->
   <div class="edit">
     <div class="sidebar-left">
-      <header>Data Modeler</header>
+      <header>1XDataModeler</header>
       <img
         src="C:\Users\Администратор\Desktop\DataModeler\src\assets\IDEF-title.png"
       />
@@ -14,7 +14,7 @@
         </li>
 
         <li>
-          Данный редактор использует <br />
+          1XDataModeler использует <br />
 
           <a
             href="https://en.wikipedia.org/wiki/IDEF1X"

@@ -24,6 +24,7 @@
 
           <option value="Identifying">Идентифицирующая определенная</option>
           <option value="M2M">Непределенная</option>
+          <option value="Recursive">Рекурсивнаяная</option>
         </select>
       </label>
       <div class="relationship-property">Описание отношения:</div>

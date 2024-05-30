@@ -2,20 +2,12 @@
   <rect
     @dblclick="this.$emit('tableEdit')"
     @mousedown="this.$emit('tableDown')"
-    @mouseup="pick"
+    @mouseup="this.$emit('tableUp')"
     id="entity"
     class="entity-table"
     v-bind="{ x: x, y: y }"
   >
   </rect>
-
-  <!-- <g class="recursive">
-    <line v-bind="{ x1: x + 95, y1: y, x2: x + 95, y2: y - 30 }"> </line>
-    <line v-bind="{ x1: x + 95, y1: y - 30, x2: x + 220, y2: y - 30 }"> </line>
-    <line v-bind="{ x1: x + 220, y1: y - 30, x2: x + 220, y2: y + 50 }"> </line>
-    <line v-bind="{ x1: x + 220, y1: y + 50, x2: x + 190, y2: y + 50 }"> </line>
-  </g> -->
-
   <text
     class="svg-entity-name"
     v-if="keys.length != 0"
@@ -27,10 +19,6 @@
   >
     {{ name }}
   </text>
-  <!--  v-bind="{
-      x: x + 50,
-      y: y + 55,
-    }" -->
   <text
     v-else
     class="svg-entity-name"
@@ -90,37 +78,28 @@ export default {
   props: {
     tableID: {
       type: String,
+      required: true,
     },
     name: {
       type: String,
+      required: true,
     },
     x: {
       type: Number,
+      required: true,
     },
     y: {
       type: Number,
+      required: true,
     },
-
     keys: {
       type: Array,
       default: () => [],
-    },
-    width: {
-      type: Number,
-    },
-    height: {
-      type: Number,
-    },
-    parentTables: {
-      type: Array,
-      default: () => [],
-    },
-    childTables: {
-      type: Array,
-      default: () => [],
+      required: true,
     },
     styleType: {
       default: 0,
+      required: true,
     },
   },
   computed: {
@@ -141,9 +120,6 @@ export default {
         return entityKey.name;
       }
     },
-    pick(event) {
-      this.$emit("tableUp");
-    },
   },
 };
 </script>
@@ -157,6 +133,7 @@ rect {
   fill: white;
   stroke: black;
   cursor: move;
+  border-radius: 5px;
   rx: v-bind (styleType);
 }
 .svg-entity-name {
@@ -176,8 +153,4 @@ line {
   stroke-width: 1.6;
   stroke: black;
 }
-/* .picked {
-  stroke-width: 1;
-  stroke: red;
-} */
 </style>

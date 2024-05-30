@@ -36,7 +36,7 @@
       <label class="attribute-property">
         <input
           type="checkbox"
-          @change="setPrimary"
+          @change="setPrimary($event, editedKey.isUnique)"
           v-model="editedKey.isPrimary"
         />
         <!-- <input type="checkbox" v-model="editedKey.isPrimary" /> -->
@@ -76,7 +76,7 @@
 
 <script>
 export default {
-  name: "key-form",
+  name: "KeyForm",
   emits: ["editKey", "keyModalClose"],
   data() {
     return {
@@ -102,8 +102,10 @@ export default {
     }
   },
   methods: {
-    setPrimary(event) {
-      if (event.target.checked) {
+    setPrimary(event, flag) {
+      if (flag) {
+        this.editedKey.isPrimary = false;
+      } else if (event.target.checked) {
         this.editedKey.isPrimary = true;
         this.editedKey.isNotNULL = true;
       } else {

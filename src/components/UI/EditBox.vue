@@ -1,6 +1,4 @@
 <template>
-  <!-- @click="hideDialog" -->
-  <!-- @click.stop -->
   <div class="edit" v-if="show">
     <div class="edit-content">
       <slot> </slot>
@@ -11,7 +9,6 @@
 <script>
 export default {
   name: "EditBox",
-
   props: {
     show: {
       type: Boolean,

@@ -1,15 +1,24 @@
 <template>
   <line
+    v-if="type != 'Recursive'"
     class="stroke"
     @mousedown="lineClicked"
     v-bind="{ x1: x1, y1: y1, x2: x2, y2: y2 }"
   ></line>
   <line
+    v-if="type != 'Recursive'"
     id="line1"
     @mousedown="lineClicked"
     :class="type"
     v-bind="{ x1: x1, y1: y1, x2: x2, y2: y2 }"
   ></line>
+  <g v-if="type == 'Recursive'" @mousedown="lineClicked" class="Recursive">
+    <line v-bind="{ x1: x1, y1: y1, x2: x1, y2: y1 - 30 }"> </line>
+    <line v-bind="{ x1: x1, y1: y1 - 30, x2: x1 + 125, y2: y1 - 30 }"> </line>
+    <line v-bind="{ x1: x1 + 125, y1: y1 - 30, x2: x1 + 125, y2: y1 + 50 }">
+    </line>
+    <line v-bind="{ x1: x1 + 125, y1: y1 + 50, x2: x2, y2: y2 }"> </line>
+  </g>
 
   <circle r="5" v-bind="{ cx: x2, cy: y2 }" />
   <circle r="5" v-if="checkM2M(type)" v-bind="{ cx: x1, cy: y1 }" />
@@ -36,13 +45,6 @@ export default {
   props: {
     relationshipID: {
       type: String,
-    },
-    parentTable: {
-      type: Number,
-      required: true,
-    },
-    childTable: {
-      type: Number,
       required: true,
     },
     type: {
@@ -51,15 +53,27 @@ export default {
     },
     x1: {
       type: Number,
+      required: true,
     },
     y1: {
       type: Number,
+      required: true,
     },
     x2: {
       type: Number,
+      required: true,
     },
     y2: {
       type: Number,
+      required: true,
+    },
+    parentTable: {
+      type: Number,
+      required: true,
+    },
+    childTable: {
+      type: Number,
+      required: true,
     },
   },
   methods: {
@@ -72,7 +86,7 @@ export default {
       else return false;
     },
     checkOptional(type) {
-      if (type.includes("Optional")) return true;
+      if (type.includes("Optional") || type.includes("Recursive")) return true;
       else return false;
     },
   },
@@ -95,6 +109,10 @@ svg line:hover {
   stroke-dasharray: 0;
 }
 .NonIdentifying {
+  stroke-dasharray: 10;
+}
+
+.Recursive {
   stroke-dasharray: 10;
 }
 rect {
